@@ -5,12 +5,14 @@ import { connectWallet, useWallet } from "./useWallet";
 
 const Wallet = () => {
 
-  const { walletConnected, accountId } = useWallet(useShallow((s) => ({
+  const { walletConnected, accountId, pairingData } = useWallet(useShallow((s) => ({
     walletConnected: s.walletConnected,
     state: s.state,
     accountId: s.accountId,
     pairingData: s.pairingData
   })))
+
+  console.log(pairingData)
 
   const btnConnectWallet = <button onClick={connectWallet}>
     connect wallet

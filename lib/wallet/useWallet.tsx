@@ -38,7 +38,7 @@ const appMetaData: DappMetadata = {
   // icon: ""
 };
 // const hashConnect = new HashConnect(appMetaData, "testnet", false);
-let hashconnect: HashConnect;
+export let hashconnect: HashConnect;
 
 export async function connectWallet() {
   hashconnect = new HashConnect(LedgerId.TESTNET, "fdb642f05db3cbb2c4a547af58fd4143", appMetaData);
