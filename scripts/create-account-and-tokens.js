@@ -5,6 +5,16 @@ import { writeFileSync } from "fs";
 
 (async function main() {
     try {
+        const TOKEN_DATA = {
+            SPHERE_NAME : "hsphere",
+            SPHERE_SYMBOL: "HSPHERE",
+            SPHERE_INITIAL_SUPPLY: "100.000.000.000.00",
+            SPHERE_MAX_SUPPLY : "100.000.000.000.000",
+            SPHERE100_NAME : "hsphere100",
+            SPHERE100_SYMBOL: "HSPHERE100",
+            USDT_NAME : "Test USDT",
+            USDT_SYMBOL: "USDT",
+        }
         // Step 1: Set up the Hedera testnet client
         const operatorId = "0.0.5274980"; // Replace with your Hedera testnet account ID
         const operatorKey = PrivateKey.fromString("302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e"); // Replace with your Hedera testnet private key
@@ -44,11 +54,11 @@ import { writeFileSync } from "fs";
 
         // Step 2: Create the first token (hsphere)
         const hsphereTx = await new TokenCreateTransaction()
-            .setTokenName("hsphere")
-            .setTokenSymbol("HSPHERE")
+            .setTokenName(TOKEN_DATA.SPHERE_NAME)
+            .setTokenSymbol(TOKEN_DATA.SPHERE_SYMBOL)
             .setDecimals(2) // Number of decimal places
-            .setInitialSupply("100.000.000.000.00") // Initial supply
-            .setMaxSupply("100.000.000.000.000") // Max supply: 100 million
+            .setInitialSupply(TOKEN_DATA.SPHERE_INITIAL_SUPPLY) 
+            .setMaxSupply(TOKEN_DATA.SPHERE_MAX_SUPPLY) // Max supply: 100 million
             .setTokenType(TokenType.FungibleCommon)
             .setSupplyType(TokenSupplyType.Finite) // Limited supply
             .setTreasuryAccountId(operatorId) // Use operator as the treasury account
@@ -63,8 +73,8 @@ import { writeFileSync } from "fs";
 
         // Step 3: Create the second token (hsphere100)
         const hsphere100Tx = await new TokenCreateTransaction()
-            .setTokenName("hsphere100")
-            .setTokenSymbol("HSPHERE100")
+            .setTokenName(TOKEN_DATA.SPHERE100_NAME)
+            .setTokenSymbol(TOKEN_DATA.SPHERE100_SYMBOL)
             .setDecimals(2) // Number of decimal places
             .setInitialSupply(0) // Initial supply
             .setTokenType(TokenType.FungibleCommon)
@@ -77,7 +87,25 @@ import { writeFileSync } from "fs";
         const hsphere100Receipt = await hsphere100Tx.getReceipt(client);
         const hsphere100TokenId = hsphere100Receipt.tokenId;
 
-        console.log(`Token 'hsphere100' created with ID: ${hsphere100TokenId}`);
+        console.log(`Token 'hsphere' created with ID: ${hsphere100TokenId}`);
+
+        // Step 3: Create the second token (hsphere100)
+        const usdt100Tx = await new TokenCreateTransaction()
+            .setTokenName(TOKEN_DATA.USDT_NAME)
+            .setTokenSymbol(TOKEN_DATA.USDT_SYMBOL)
+            .setDecimals(2) // Number of decimal places
+            .setInitialSupply(0) // Initial supply
+            .setTokenType(TokenType.FungibleCommon)
+            .setSupplyType(TokenSupplyType.Infinite) // Unlimited supply
+            .setTreasuryAccountId(operatorId) // Use operator as the treasury account
+            .setAdminKey(operatorKey) // Set admin key for managing the token
+            .setSupplyKey(operatorKey) // Set supply key for minting
+            .execute(client);
+
+        const usdtReceipt = await usdt100Tx.getReceipt(client);
+        const usdtTokenId = usdtReceipt.tokenId;
+
+        console.log(`Token 'usdt' created with ID: ${usdtTokenId}`);
 
         // Step 4: Store all data in a JSON file
         const data = {
@@ -87,16 +115,23 @@ import { writeFileSync } from "fs";
             },
             tokens: [
                 {
-                    name: "hsphere",
-                    symbol: "HSPHERE",
+                    name: TOKEN_DATA.SPHERE_NAME,
+                    symbol: TOKEN_DATA.SPHERE_SYMBOL,
                     tokenId: hsphereTokenId.toString(),
-                    maxSupply: 100_000_000,
+                    maxSupply: TOKEN_DATA.SPHERE_MAX_SUPPLY,
                     supplyType: "Finite",
                 },
                 {
-                    name: "hsphere100",
-                    symbol: "HSPHERE100",
+                    name: TOKEN_DATA.SPHERE100_NAME,
+                    symbol: TOKEN_DATA.SPHERE100_SYMBOL,
                     tokenId: hsphere100TokenId.toString(),
+                    maxSupply: "Unlimited",
+                    supplyType: "Infinite",
+                },
+                {
+                    name: TOKEN_DATA.USDT_NAME,
+                    symbol: TOKEN_DATA.USDT_SYMBOL,
+                    tokenId: usdtTokenId.toString(),
                     maxSupply: "Unlimited",
                     supplyType: "Infinite",
                 },

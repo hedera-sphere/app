@@ -7,14 +7,21 @@
         {
             "name": "hsphere",
             "symbol": "HSPHERE",
-            "tokenId": "0.0.5275614",
-            "maxSupply": 100000000,
+            "tokenId": "0.0.5276137",
+            "maxSupply": "100.000.000.000.000",
             "supplyType": "Finite"
         },
         {
             "name": "hsphere100",
             "symbol": "HSPHERE100",
-            "tokenId": "0.0.5275615",
+            "tokenId": "0.0.5276138",
+            "maxSupply": "Unlimited",
+            "supplyType": "Infinite"
+        },
+        {
+            "name": "Test USDT",
+            "symbol": "USDT",
+            "tokenId": "0.0.5276139",
             "maxSupply": "Unlimited",
             "supplyType": "Infinite"
         }
