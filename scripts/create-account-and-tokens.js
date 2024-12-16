@@ -113,29 +113,29 @@ import { writeFileSync } from "fs";
                 accountId: operatorId,
                 privateKey: operatorKey.toString(),
             },
-            tokens: [
-                {
+            tokens: {
+                hsphere: {
                     name: TOKEN_DATA.SPHERE_NAME,
                     symbol: TOKEN_DATA.SPHERE_SYMBOL,
                     tokenId: hsphereTokenId.toString(),
                     maxSupply: TOKEN_DATA.SPHERE_MAX_SUPPLY,
                     supplyType: "Finite",
                 },
-                {
+                hsphere100: {
                     name: TOKEN_DATA.SPHERE100_NAME,
                     symbol: TOKEN_DATA.SPHERE100_SYMBOL,
                     tokenId: hsphere100TokenId.toString(),
                     maxSupply: "Unlimited",
                     supplyType: "Infinite",
                 },
-                {
+                usdt: {
                     name: TOKEN_DATA.USDT_NAME,
                     symbol: TOKEN_DATA.USDT_SYMBOL,
                     tokenId: usdtTokenId.toString(),
                     maxSupply: "Unlimited",
                     supplyType: "Infinite",
                 },
-            ],
+            },
         };
 
         writeFileSync("hedera_data.json", JSON.stringify(data, null, 4));

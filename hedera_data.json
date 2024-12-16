@@ -3,27 +3,27 @@
         "accountId": "0.0.5274980",
         "privateKey": "302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e"
     },
-    "tokens": [
-        {
+    "tokens": {
+        "hsphere": {
             "name": "hsphere",
             "symbol": "HSPHERE",
-            "tokenId": "0.0.5276137",
+            "tokenId": "0.0.5276815",
             "maxSupply": "100.000.000.000.000",
             "supplyType": "Finite"
         },
-        {
+        "hsphere100": {
             "name": "hsphere100",
             "symbol": "HSPHERE100",
-            "tokenId": "0.0.5276138",
+            "tokenId": "0.0.5276818",
             "maxSupply": "Unlimited",
             "supplyType": "Infinite"
         },
-        {
+        "usdt": {
             "name": "Test USDT",
             "symbol": "USDT",
-            "tokenId": "0.0.5276139",
+            "tokenId": "0.0.5276820",
             "maxSupply": "Unlimited",
             "supplyType": "Infinite"
         }
-    ]
+    }
 }
