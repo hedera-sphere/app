@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Wallet } from "@/lib/Wallet";
+import Link from "next/link";
 
 
 const geistSans = Geist({
@@ -29,6 +30,21 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <nav>
+          <div>
+            <Link href={"/"}>
+              Home
+            </Link>
+          </div>
+          <div>
+            <Link href={"/about"}>
+              About
+            </Link>
+          </div>
+          <div>
+            <Link href={"/mint-usdt"}>
+              Mint Usdt
+            </Link>
+          </div>
           <Wallet />
         </nav>
         {children}
