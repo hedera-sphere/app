@@ -1,0 +1,22 @@
+{
+    "creatorAccount": {
+        "accountId": "0.0.5274980",
+        "privateKey": "302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e"
+    },
+    "tokens": [
+        {
+            "name": "hsphere",
+            "symbol": "HSPHERE",
+            "tokenId": "0.0.5275053",
+            "maxSupply": 100000000,
+            "supplyType": "Finite"
+        },
+        {
+            "name": "hsphere100",
+            "symbol": "HSPHERE100",
+            "tokenId": "0.0.5275054",
+            "maxSupply": "Unlimited",
+            "supplyType": "Infinite"
+        }
+    ]
+}
