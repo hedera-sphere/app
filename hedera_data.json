@@ -7,14 +7,14 @@
         {
             "name": "hsphere",
             "symbol": "HSPHERE",
-            "tokenId": "0.0.5275053",
+            "tokenId": "0.0.5275614",
             "maxSupply": 100000000,
             "supplyType": "Finite"
         },
         {
             "name": "hsphere100",
             "symbol": "HSPHERE100",
-            "tokenId": "0.0.5275054",
+            "tokenId": "0.0.5275615",
             "maxSupply": "Unlimited",
             "supplyType": "Infinite"
         }

@@ -1,5 +1,5 @@
 import { Client, PrivateKey, TokenCreateTransaction, TokenType, TokenSupplyType
-    // , AccountBalanceQuery, TokenDeleteTransaction
+    , AccountBalanceQuery, TokenDeleteTransaction
  } from "@hashgraph/sdk";
 import { writeFileSync } from "fs";
 
@@ -13,42 +13,42 @@ import { writeFileSync } from "fs";
         client.setOperator(operatorId, operatorKey);
 
         //   Delete tokens created by the account
-        // console.log("Fetching tokens linked to the account...");
-        // const balanceQuery = await new AccountBalanceQuery()
-        //     .setAccountId(operatorId)
-        //     .execute(client);
+        console.log("Fetching tokens linked to the account...");
+        const balanceQuery = await new AccountBalanceQuery()
+            .setAccountId(operatorId)
+            .execute(client);
 
-        // const tokens = balanceQuery.tokens;
-        // console.log("Tokens associated with the account:", tokens);
+        const tokens = balanceQuery.tokens;
+        console.log("Tokens associated with the account:", tokens);
 
-        // for (const [tokenId] of tokens) {
-        //     try {
-        //         console.log(`Deleting token: ${tokenId}`);
+        for (const [tokenId] of tokens) {
+            try {
+                console.log(`Deleting token: ${tokenId}`);
         
-        //         // Create a TokenDeleteTransaction
-        //         const deleteTx = await new TokenDeleteTransaction()
-        //             .setTokenId(tokenId)
-        //             .freezeWith(client); // Freeze the transaction with the client
+                // Create a TokenDeleteTransaction
+                const deleteTx = await new TokenDeleteTransaction()
+                    .setTokenId(tokenId)
+                    .freezeWith(client); // Freeze the transaction with the client
         
-        //         // Sign the transaction with the admin key
-        //         const signedDeleteTx = await deleteTx.sign(operatorKey);
+                // Sign the transaction with the admin key
+                const signedDeleteTx = await deleteTx.sign(operatorKey);
         
-        //         // Execute the transaction and get the receipt
-        //         await signedDeleteTx.execute(client).then(tx => tx.getReceipt(client));
+                // Execute the transaction and get the receipt
+                await signedDeleteTx.execute(client).then(tx => tx.getReceipt(client));
         
-        //         console.log(`Token ${tokenId} deleted successfully.`);
-        //     } catch (error) {
-        //         console.warn(`Could not delete token ${tokenId}:`, error.message);
-        //     }
-        // }
+                console.log(`Token ${tokenId} deleted successfully.`);
+            } catch (error) {
+                console.warn(`Could not delete token ${tokenId}:`, error.message);
+            }
+        }
 
         // Step 2: Create the first token (hsphere)
         const hsphereTx = await new TokenCreateTransaction()
             .setTokenName("hsphere")
             .setTokenSymbol("HSPHERE")
             .setDecimals(2) // Number of decimal places
-            .setInitialSupply(0) // Initial supply
-            .setMaxSupply(100_000_000) // Max supply: 100 million
+            .setInitialSupply("100.000.000.000.00") // Initial supply
+            .setMaxSupply("100.000.000.000.000") // Max supply: 100 million
             .setTokenType(TokenType.FungibleCommon)
             .setSupplyType(TokenSupplyType.Finite) // Limited supply
             .setTreasuryAccountId(operatorId) // Use operator as the treasury account
