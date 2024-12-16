@@ -1,25 +1,39 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type CryptoInputProps = {
   max?: number
-  tokenBalance?: number,
-  TokenLogo: React.FC, // <Imagen />
+  maxMessage?: string,
+  tokenBalance?: number, // ex. Balance: 1000, 2000
+  tokenLogo: React.ReactNode, // <Imagen />
   tokenName: string,
   initialValue: number
   onChange: (val: number) => void
 }
 export const CryptoInput = ({
   max,
+  maxMessage,
   tokenBalance,
-  TokenLogo,
+  tokenLogo,
   tokenName,
-  initialValue
+  initialValue,
+  onChange
 }: CryptoInputProps) => {
-  const [value, setValue] = useState(initialValue)
+  const [value, setValueState] = useState(initialValue)
+  function setValue(val: number){
+    if(val >= 0 && val <= (max ?? 0)){
+      setValueState(val)
+    }
+  }
 
   function setMax() {
-    setValue(max ?? value)
+    const defaultValue = tokenBalance ?? value;
+    setValue(max ?? defaultValue)
   }
+
+  useEffect(()=>{
+    onChange(value)
+  },[value, onChange])
+
   return <div>
     <input
       value={value}
@@ -30,16 +44,11 @@ export const CryptoInput = ({
     />
     <div>
       <div>
-        <TokenLogo />
+        {tokenLogo}
         <span>{tokenName}</span>
       </div>
       <div>
-        {
-          tokenBalance && <>
-            <span>Balance: {tokenBalance}</span>
-            {max && <span onClick={setMax}>max</span>}
-          </>
-        }
+        {maxMessage && <span onClick={setMax}>{maxMessage}</span>}
       </div>
     </div>
   </div>
