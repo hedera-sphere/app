@@ -35,12 +35,13 @@ export async function invest(rawAmount: number): Promise<number> {
   console.log("Investing: ", rawAmount);
 
   const accountId = getAccountId();
-  const amountWithDecimals = rawAmount * 100;
-  const amount = Long.fromString(amountWithDecimals.toString());
-  const spherePrice = await getSpherePrice();
-  const rawAmountSphereTokensToTransfer = amountWithDecimals * spherePrice;
-  const amountSphereTokensToTransfer = Long.fromString(rawAmountSphereTokensToTransfer.toString());
+  // calculate amount
+  const amount = createHederaPrice(rawAmount);
 
+  // calculate sphere amount
+  const spherePrice = await getSpherePrice();
+  const rawAmountSphereTokensToTransfer = rawAmount * spherePrice;
+  const amountSphereTokensToTransfer = createHederaPrice(rawAmountSphereTokensToTransfer);
   // associate sphere token
   const tokenSupport = await checkTokenSupport(SPHERE_100.address);
   if (!tokenSupport) throw new Error(`You must accept associate token ${SPHERE_100.name} with tokenid ${SPHERE_100.address} transaction`);
@@ -62,11 +63,15 @@ export async function sellInvestment(rawAmount: number): Promise<number> {
   if (rawAmount <= 0) throw new Error("Amount must be greater than 0");
   console.log("Selling investment: ", rawAmount);
   const accountId = getAccountId();
-  const amountWithDecimals = rawAmount * 100;
-  const amount = Long.fromString(amountWithDecimals.toString());
+
+  // convert amount to 2 decimals and convert to long
+  const amount = createHederaPrice(rawAmount);
+
+  // calculate usdt amount
   const spherePrice = await getSpherePrice();
-  const rawAmountUsdtTokensToTransfer = amountWithDecimals / spherePrice;
-  const amountUsdtTokensToTransfer = Long.fromString(rawAmountUsdtTokensToTransfer.toString());
+  const rawAmountUsdtTokensToTransfer = (rawAmount / spherePrice);
+  const amountUsdtTokensToTransfer = createHederaPrice(rawAmountUsdtTokensToTransfer);
+
   // mint usdt tokens to transfer
   const mintTokensReceipt = await mintToken(USDT.address, amountUsdtTokensToTransfer);
   console.log("Tokens minted: ", mintTokensReceipt);
@@ -80,6 +85,15 @@ export async function sellInvestment(rawAmount: number): Promise<number> {
 
 export async function getSpherePrice(): Promise<number> {
   return 1.5;
+}
+
+function createHederaPrice(amount: number): Long {
+  amount = convertTo2Decimals(amount);
+  amount = amount * 100;
+  return Long.fromString(amount.toString());
+}
+export function convertTo2Decimals(amount: number): number {
+  return parseFloat(amount.toFixed(2));
 }
 
 async function mintToken(tokenId: string, amount: Long) {
@@ -209,4 +223,8 @@ export async function checkTokenSupport(address: string = USDT.address): Promise
     // Return false if an error occurs
     return false;
   }
+}
+
+export function removeDecimal(value: number): number {
+  return parseInt(value.toString(), 10);
 }

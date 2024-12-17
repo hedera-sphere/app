@@ -40,9 +40,13 @@ export const CryptoInput = ({
     <input
       value={value}
       min={0}
+      step={1}
       type="number"
       onChange={(e) => {
-        setValue(Number(e.target.value))
+        const inputValue = e.target.value;
+        // Remove decimals by converting to an integer
+        const intValue = Math.floor(Number(inputValue));
+        setValue(intValue >= 0 ? intValue : 0); // Ensure non-negative values
       }}
     />
     <div>

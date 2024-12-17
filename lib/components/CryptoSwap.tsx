@@ -5,7 +5,7 @@ import { CryptoInput, CryptoInputProps } from "./CryptoInput"
 import Image from "next/image";
 import { SPHERE_100, USDT } from "../consts/tokens";
 import { ConnectWalletVerification } from "../wallet/ConnectWalletVerification";
-import { getSpherePrice, invest, sellInvestment } from "../utils/transactions";
+import { convertTo2Decimals, getSpherePrice, invest, sellInvestment } from "../utils/transactions";
 
 export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
@@ -18,10 +18,10 @@ export const CryptoSwap = () => {
     const spherePrice = await getSpherePrice();
     if (tokenName == USDT.name) {
       setUsdtAmount(amount)
-      setSphereAmount(amount * spherePrice)
+      setSphereAmount(convertTo2Decimals(amount * spherePrice))
     } else {
       setSphereAmount(amount)
-      setUsdtAmount(amount / spherePrice)
+      setUsdtAmount(convertTo2Decimals(amount / spherePrice))
     }
   }
 
