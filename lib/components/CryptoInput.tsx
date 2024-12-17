@@ -55,7 +55,7 @@ export const CryptoInput = ({
         <span>{tokenName}</span>
       </div>
       <div>
-        {maxMessage && <span onClick={setMax}>{maxMessage}</span>}
+        {maxMessage && <span onClick={setMax}><u>{maxMessage}</u></span>}
       </div>
     </div>
   </div>

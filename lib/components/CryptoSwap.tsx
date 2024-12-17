@@ -73,9 +73,16 @@ export const CryptoSwap = () => {
     value: sphereAmount,
     onChange: (amount: number) => onChangeCoinAmount(amount, SPHERE_100.name)
   }
+  if(swapStatus == "buy"){
+    USDT_PROPS.tokenBalance = 1000;
+    USDT_PROPS.maxMessage = "Balance: 1000 (TEST)"
+  }else{
+    SPHERE_PROPS.tokenBalance = 2000;
+    SPHERE_PROPS.maxMessage = "Balance: 2000 (TEST)"
+  }
   const topCoin: CryptoInputProps = swapStatus == "buy" ? USDT_PROPS : SPHERE_PROPS;
   const bottomCoin: CryptoInputProps = swapStatus == "buy" ? SPHERE_PROPS : USDT_PROPS;
-
+  
   function onSwapClick() {
     setSwapStatus(swapStatus == "buy" ? "sell" : "buy")
   }
