@@ -34,11 +34,13 @@ export const CryptoSwap = () => {
       setData({ isVisible: true, status: AVAILABLE_STATUS.LOADING, message: "Please wait... Accept Hashpack transactions" });
       
       if (swapStatus == "buy") {
-        const tokenAmount = await invest(usdtAmount)
-        setData({ message : tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!", status: AVAILABLE_STATUS.SUCCESS });
+        const transactionStatus = await invest(usdtAmount)
+        const msg = (transactionStatus?.amountReceived ?? 0) + " HSPHERE100 tokens successfully transfered to your wallet with transaction id: " + transactionStatus?.txId;
+        setData({ message : msg, status: AVAILABLE_STATUS.SUCCESS });
       } else {
-        const tokenAmount = await sellInvestment(sphereAmount)
-        setData({ message : tokenAmount + " USDT tokens successfully transfered to your wallet!!!", status: AVAILABLE_STATUS.SUCCESS });
+        const transactionStatus = await sellInvestment(sphereAmount)
+        const msg = (transactionStatus?.amountReceived ?? 0) + " USDT tokens successfully transfered to your wallet with transaction id: " + transactionStatus?.txId;
+        setData({ message : msg, status: AVAILABLE_STATUS.SUCCESS });
       }
       setUsdtAmount(0)
       setSphereAmount(0)
@@ -50,7 +52,7 @@ export const CryptoSwap = () => {
       } else {
         msg = "An unknown error occurred"
       }
-      setData({ status: AVAILABLE_STATUS.LOADING, message: msg });
+      setData({ status: AVAILABLE_STATUS.ERROR, message: msg });
     }
   }
 

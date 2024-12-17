@@ -3,6 +3,10 @@ import { hashconnect, useWallet } from "../wallet/useWallet";
 import { SPHERE_100, Token, USDT } from "../consts/tokens";
 import HEDERA_DATA from '@/hedera_data.json'
 
+export type TransactionResponse = {
+  txId: string;
+  amountReceived?: number;
+}
 const SPHERE_WALLET_ADRESS = HEDERA_DATA.creatorAccount.accountId;
 const SUCCESS_MESSAGE = "SUCCESS";
 const OPERATOR_ID = "0.0.5274980";
@@ -30,7 +34,7 @@ export async function mintUsdt(rawAmount: number) {
   console.log("Tokens sent: ", sendTokensReceipt);
 }
 
-export async function invest(rawAmount: number): Promise<number> {
+export async function invest(rawAmount: number): Promise<TransactionResponse> {
   if (rawAmount <= 0) throw new Error("Amount must be greater than 0");
   console.log("Investing: ", rawAmount);
 
@@ -51,15 +55,11 @@ export async function invest(rawAmount: number): Promise<number> {
   console.log("Tokens minted: ", mintTokensReceipt);
 
   // receiving usdt tokens
-  const receiveTokensReceipt = await swapTokens(accountId, amount, amountSphereTokensToTransfer, USDT, SPHERE_100);
-  console.log("Tokens received: ", receiveTokensReceipt);
-
-  // send sphere tokens
-
-  return amountSphereTokensToTransfer.toNumber() / 100;
+  return await swapTokens(accountId, amount, amountSphereTokensToTransfer, USDT, SPHERE_100);
+  
 }
 
-export async function sellInvestment(rawAmount: number): Promise<number> {
+export async function sellInvestment(rawAmount: number): Promise<TransactionResponse> {
   if (rawAmount <= 0) throw new Error("Amount must be greater than 0");
   console.log("Selling investment: ", rawAmount);
   const accountId = getAccountId();
@@ -77,10 +77,7 @@ export async function sellInvestment(rawAmount: number): Promise<number> {
   console.log("Tokens minted: ", mintTokensReceipt);
 
   // swap sphere tokens
-  const receiveTokensReceipt = await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
-  console.log("Tokens received: ", receiveTokensReceipt);
-
-  return amountUsdtTokensToTransfer.toNumber() / 100;
+  return await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
 }
 
 export async function getSpherePrice(): Promise<number> {
@@ -149,7 +146,13 @@ export async function sendTokens(accountId: AccountId, amount: Long, token: Toke
 
 }
 
-export async function swapTokens(accountId: AccountId, receiveAmount: Long, sendAmount: Long, receiveToken: Token, sendToken: Token) {
+export async function swapTokens(
+  accountId: AccountId,
+   receiveAmount: Long, 
+   sendAmount: Long,
+    receiveToken: Token, 
+    sendToken: Token
+  ): Promise<TransactionResponse> {
   const signer = await getSigner();
   const client = await getClient();
 
@@ -175,8 +178,14 @@ export async function swapTokens(accountId: AccountId, receiveAmount: Long, send
 
   if (transactionStatusTransfer.toString() == SUCCESS_MESSAGE) {
     console.log(receiveToken.name + " token received successfully");
+    console.log("transferTx: ", transferTx);
+    console.log("receipt: ", receipt);
+    console.log("response: ", response);
+    console.log(response?.transactionId);
+    console.log("==============", (await transferTx?.getTransactionHash()).toString())
+    return { txId: response?.transactionId.toString(), amountReceived: sendAmount.toNumber() / 100 };
   } else {
-    throw new Error(receiveToken.name + " transfer failed");
+    throw new Error(receiveToken.name + " transfer failed for transactionId: " + response?.transactionId.toString());
   }
 }
 
