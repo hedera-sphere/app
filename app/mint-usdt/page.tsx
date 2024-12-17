@@ -3,22 +3,28 @@
 import { CryptoInput } from "@/lib/components/CryptoInput";
 import { checkTokenSupport, mintUsdt } from "@/lib/utils/transactions";
 import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
+import Image from "next/image";
 import { useState } from "react";
 const MAX_MINT = 10000;
 export default function Home() {
   const [amount, setAmount] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
+
   async function onSubmit() {
-    console.log("minting tokens", amount)
+    // reset messages
     setErrorMsg("")
     setSuccessMsg("")
+
+    // check if user accepted associate token transaction
     const tokenSuport = await checkTokenSupport()
     if (!tokenSuport) {
       setErrorMsg("You must accept associate token transaction")
       return
     }
     console.log("tokenSuport: ", tokenSuport)
+
+    // mint usdt and send to user
     const mintSuccess = mintUsdt(amount)
     if (!mintSuccess) {
       setErrorMsg("Error minting tokens")
@@ -35,9 +41,9 @@ export default function Home() {
       <CryptoInput
         max={MAX_MINT}
         maxMessage={`${MAX_MINT} maxium`}
-        tokenLogo={<></>}
-        initialValue={amount}
-        onChange={setAmount}
+        tokenLogo={ <Image src="/usdt.png" alt="usdt" width={25} height={25}/>}
+        value={amount}
+        onChange={(v: number) => setAmount(v)}
         tokenName=""
       />
       <ConnectWalletVerification>
