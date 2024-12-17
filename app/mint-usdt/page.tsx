@@ -1,35 +1,36 @@
 "use client";
 
 import { CryptoInput } from "@/lib/components/CryptoInput";
+import { AVAILABLE_STATUS, StatusPopupState } from "@/lib/components/StatusPopup";
 import {  mintUsdt } from "@/lib/utils/transactions";
 import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
 import Image from "next/image";
 import { useState } from "react";
+import { useShallow } from "zustand/shallow";
 const MAX_MINT = 10000;
 export default function Home() {
   const [amount, setAmount] = useState<number>(0);
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const [successMsg, setSuccessMsg] = useState<string>("");
-
+  const { setData } = StatusPopupState(useShallow((s) => ({
+    setData: s.setData
+  })));
   async function onSubmit() {
     try {
-      // reset messages
-      setErrorMsg("")
-      setSuccessMsg("")
+      // show modal
+      setData({ isVisible: true, status: AVAILABLE_STATUS.LOADING, message: "Please wait... Accept Hashpack transactions" });
 
       // mint usdt and send to user
       await mintUsdt(amount)
-
-      setSuccessMsg("Tokens minted successfully!!!")
+      setData({ message: amount + " USDT tokens successfully transfered to your wallet!!!", status: AVAILABLE_STATUS.SUCCESS });
       setAmount(0)
     } catch (e) {
       console.error(e)
-
+      let msg = ""
       if (e instanceof Error) {
-        setErrorMsg(e.message);
+        msg = e.message;
       } else {
-        setErrorMsg("An unknown error occurred");
+        msg = "An unknown error occurred"
       }
+      setData({ status: AVAILABLE_STATUS.LOADING, message: msg });
     }
 
   }
@@ -37,8 +38,6 @@ export default function Home() {
   return (
     <div>
       <span>Mint usdt to test our project :)</span>
-      {errorMsg && <span style={{ backgroundColor: 'red' }}>{errorMsg}</span>}
-      {successMsg && <span style={{ backgroundColor: 'green' }}>{successMsg}</span>}
       <CryptoInput
         max={MAX_MINT}
         maxMessage={`${MAX_MINT} maxium`}

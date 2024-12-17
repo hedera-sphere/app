@@ -6,13 +6,16 @@ import Image from "next/image";
 import { SPHERE_100, USDT } from "../consts/tokens";
 import { ConnectWalletVerification } from "../wallet/ConnectWalletVerification";
 import { convertTo2Decimals, getSpherePrice, invest, sellInvestment } from "../utils/transactions";
+import { AVAILABLE_STATUS, StatusPopupState } from "./StatusPopup";
+import { useShallow } from "zustand/shallow";
 
 export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
   const [usdtAmount, setUsdtAmount] = useState<number>(0);
   const [sphereAmount, setSphereAmount] = useState<number>(0);
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const [successMsg, setSuccessMsg] = useState<string>("");
+  const { setData } = StatusPopupState(useShallow((s) => ({
+    setData: s.setData
+  })));
 
   async function onChangeCoinAmount(amount: number, tokenName: string) {
     const spherePrice = await getSpherePrice();
@@ -26,46 +29,31 @@ export const CryptoSwap = () => {
   }
 
   async function onSubmit() {
-    if (swapStatus == "buy") {
-      try {
-        // reset messages
-        setErrorMsg("")
-        setSuccessMsg("")
-
+    try {
+      // show modal
+      setData({ isVisible: true, status: AVAILABLE_STATUS.LOADING, message: "Please wait... Accept Hashpack transactions" });
+      
+      if (swapStatus == "buy") {
         const tokenAmount = await invest(usdtAmount)
-
-        setSuccessMsg(tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!")
-        setUsdtAmount(0)
-        setSphereAmount(0)
-      } catch (e) {
-        console.error(e)
-        if (e instanceof Error) {
-          setErrorMsg(e.message);
-        } else {
-          setErrorMsg("An unknown error occurred");
-        }
-      }
-    } else {
-      try {
-        // reset messages
-        setErrorMsg("")
-        setSuccessMsg("")
-
+        setData({ message : tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!", status: AVAILABLE_STATUS.SUCCESS });
+      } else {
         const tokenAmount = await sellInvestment(sphereAmount)
-
-        setSuccessMsg(tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!")
-        setUsdtAmount(0)
-        setSphereAmount(0)
-      } catch (e) {
-        console.error(e)
-        if (e instanceof Error) {
-          setErrorMsg(e.message);
-        } else {
-          setErrorMsg("An unknown error occurred");
-        }
+        setData({ message : tokenAmount + " USDT tokens successfully transfered to your wallet!!!", status: AVAILABLE_STATUS.SUCCESS });
       }
+      setUsdtAmount(0)
+      setSphereAmount(0)
+    } catch (e) {
+      console.error(e)
+      let msg = ""
+      if (e instanceof Error) {
+        msg = e.message;
+      } else {
+        msg = "An unknown error occurred"
+      }
+      setData({ status: AVAILABLE_STATUS.LOADING, message: msg });
     }
   }
+
   const USDT_PROPS: CryptoInputProps = {
     // max,
     // maxMessage,
@@ -102,8 +90,6 @@ export const CryptoSwap = () => {
     <CryptoInput
       {...bottomCoin}
     />
-    {errorMsg && <span style={{ backgroundColor: 'red' }}>{errorMsg}</span>}
-    {successMsg && <span style={{ backgroundColor: 'green' }}>{successMsg}</span>}
     <ConnectWalletVerification>
       <button onClick={onSubmit}>{swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}</button>
     </ConnectWalletVerification>

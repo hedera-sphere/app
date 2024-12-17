@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { NavConnectWallet } from "@/lib/wallet/NavConnectWallet";
-
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { StatusPopup } from "@/lib/components/StatusPopup";
 
 
 const geistSans = Geist({
@@ -30,25 +31,30 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <nav>
-          <div>
-            <Link href={"/"}>
-              Home
-            </Link>
-          </div>
-          <div>
-            <Link href={"/about"}>
-              About
-            </Link>
-          </div>
-          <div>
-            <Link href={"/mint-usdt"}>
-              Mint Usdt
-            </Link>
-          </div>
-          <NavConnectWallet />
-        </nav>
-        {children}
+        <AntdRegistry >
+
+          <nav>
+            <div>
+              <Link href={"/"}>
+                Home
+              </Link>
+            </div>
+            <div>
+              <Link href={"/about"}>
+                About
+              </Link>
+            </div>
+            <div>
+              <Link href={"/mint-usdt"}>
+                Mint Usdt
+              </Link>
+            </div>
+            <NavConnectWallet />
+            <StatusPopup />
+          </nav>
+          {children}
+        </AntdRegistry>
+
       </body>
     </html>
   );
