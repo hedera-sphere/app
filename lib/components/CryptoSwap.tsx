@@ -5,18 +5,27 @@ import { CryptoInput, CryptoInputProps } from "./CryptoInput"
 import Image from "next/image";
 import { SPHERE_100, USDT } from "../consts/tokens";
 import { ConnectWalletVerification } from "../wallet/ConnectWalletVerification";
+import { getSpherePrice, invest } from "../utils/transactions";
 
 export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
   const [usdtAmount, setUsdtAmount] = useState<number>(0);
   const [sphereAmount, setSphereAmount] = useState<number>(0);
 
-  function onChangeCoinAmount(amount: number, tokenName: string) {
-
+  async function onChangeCoinAmount(amount: number, tokenName: string) {
+    const spherePrice = await getSpherePrice();
     if (tokenName == USDT.name) {
       setUsdtAmount(amount)
+      setSphereAmount(amount * spherePrice)
     } else {
       setSphereAmount(amount)
+      setUsdtAmount(amount / spherePrice)
+    }
+  }
+
+  function onSubmit(){
+    if(swapStatus == "buy"){
+      invest(usdtAmount)
     }
   }
   const USDT_PROPS: CryptoInputProps = {
@@ -56,7 +65,7 @@ export const CryptoSwap = () => {
       {...bottomCoin}
     />
     <ConnectWalletVerification>
-      <button>{swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}</button>
+      <button onClick={onSubmit}>{swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}</button>
     </ConnectWalletVerification>
   </div>
 }
