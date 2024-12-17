@@ -5,7 +5,7 @@ import { CryptoInput, CryptoInputProps } from "./CryptoInput"
 import Image from "next/image";
 import { SPHERE_100, USDT } from "../consts/tokens";
 import { ConnectWalletVerification } from "../wallet/ConnectWalletVerification";
-import { getSpherePrice, invest } from "../utils/transactions";
+import { getSpherePrice, invest, sellInvestment } from "../utils/transactions";
 
 export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
@@ -33,6 +33,25 @@ export const CryptoSwap = () => {
         setSuccessMsg("")
 
         const tokenAmount = await invest(usdtAmount)
+
+        setSuccessMsg(tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!")
+        setUsdtAmount(0)
+        setSphereAmount(0)
+      } catch (e) {
+        console.error(e)
+        if (e instanceof Error) {
+          setErrorMsg(e.message);
+        } else {
+          setErrorMsg("An unknown error occurred");
+        }
+      }
+    } else {
+      try {
+        // reset messages
+        setErrorMsg("")
+        setSuccessMsg("")
+
+        const tokenAmount = await sellInvestment(sphereAmount)
 
         setSuccessMsg(tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!")
         setUsdtAmount(0)

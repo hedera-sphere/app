@@ -18,7 +18,7 @@ export async function mintUsdt(rawAmount: number) {
 
   // associate USDT token
   const tokenSupport = await checkTokenSupport(USDT.address);
-  if(!tokenSupport) throw new Error(`You must accept associate token ${USDT.name} with tokenid ${USDT.address} transaction`);
+  if (!tokenSupport) throw new Error(`You must accept associate token ${USDT.name} with tokenid ${USDT.address} transaction`);
 
   // mint tokens
   console.log("minting tokens: ", amount)
@@ -32,6 +32,7 @@ export async function mintUsdt(rawAmount: number) {
 
 export async function invest(rawAmount: number): Promise<number> {
   if (rawAmount <= 0) throw new Error("Amount must be greater than 0");
+  console.log("Investing: ", rawAmount);
 
   const accountId = getAccountId();
   const amountWithDecimals = rawAmount * 100;
@@ -42,29 +43,43 @@ export async function invest(rawAmount: number): Promise<number> {
 
   // associate sphere token
   const tokenSupport = await checkTokenSupport(SPHERE_100.address);
-  if(!tokenSupport) throw new Error(`You must accept associate token ${SPHERE_100.name} with tokenid ${SPHERE_100.address} transaction`);
+  if (!tokenSupport) throw new Error(`You must accept associate token ${SPHERE_100.name} with tokenid ${SPHERE_100.address} transaction`);
+  
+  // mint sphere tokens to transfer
+  const mintTokensReceipt = await mintToken(SPHERE_100.address, amountSphereTokensToTransfer);
+  console.log("Tokens minted: ", mintTokensReceipt);
 
   // receiving usdt tokens
-  const receiveTokensReceipt = await receiveTokens(accountId, amount, USDT);
+  const receiveTokensReceipt = await swapTokens(accountId, amount, amountSphereTokensToTransfer, USDT, SPHERE_100);
   console.log("Tokens received: ", receiveTokensReceipt);
 
   // send sphere tokens
-  const mintTokensReceipt = await mintToken(SPHERE_100.address, amountSphereTokensToTransfer);
-  console.log("Tokens minted: ", mintTokensReceipt);
-  const sendTokensReceipt = await sendTokens(accountId, amountSphereTokensToTransfer, SPHERE_100);
-  console.log("Tokens sent: ", sendTokensReceipt);
 
-  return amountSphereTokensToTransfer;
+  return amountSphereTokensToTransfer.toNumber() / 100;
+}
+
+export async function sellInvestment(rawAmount: number): Promise<number> {
+  if (rawAmount <= 0) throw new Error("Amount must be greater than 0");
+  console.log("Selling investment: ", rawAmount);
+  const accountId = getAccountId();
+  const amountWithDecimals = rawAmount * 100;
+  const amount = Long.fromString(amountWithDecimals.toString());
+  const spherePrice = await getSpherePrice();
+  const rawAmountUsdtTokensToTransfer = amountWithDecimals / spherePrice;
+  const amountUsdtTokensToTransfer = Long.fromString(rawAmountUsdtTokensToTransfer.toString());
+  // mint usdt tokens to transfer
+  const mintTokensReceipt = await mintToken(USDT.address, amountUsdtTokensToTransfer);
+  console.log("Tokens minted: ", mintTokensReceipt);
+
+  // swap sphere tokens
+  const receiveTokensReceipt = await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
+  console.log("Tokens received: ", receiveTokensReceipt);
+
+  return amountUsdtTokensToTransfer.toNumber() / 100;
 }
 
 export async function getSpherePrice(): Promise<number> {
   return 1.5;
-}
-
-async function getClient() {
-  const client = Client.forTestnet();
-  client.setOperator(OPERATOR_ID, OPERATOR_KEY);
-  return client;
 }
 
 async function mintToken(tokenId: string, amount: Long) {
@@ -120,27 +135,41 @@ export async function sendTokens(accountId: AccountId, amount: Long, token: Toke
 
 }
 
-export async function receiveTokens(accountId: AccountId, amount: Long, token: Token) {
+export async function swapTokens(accountId: AccountId, receiveAmount: Long, sendAmount: Long, receiveToken: Token, sendToken: Token) {
   const signer = await getSigner();
   const client = await getClient();
 
   const transferTx = await new TransferTransaction()
-    .addTokenTransfer(token.address, accountId, -amount)
-    .addTokenTransfer(token.address, SPHERE_WALLET_ADRESS, amount)
+    .addTokenTransfer(receiveToken.address, accountId, -receiveAmount)
+    .addTokenTransfer(receiveToken.address, SPHERE_WALLET_ADRESS, receiveAmount)
+    .addTokenTransfer(sendToken.address, SPHERE_WALLET_ADRESS, -sendAmount)
+    .addTokenTransfer(sendToken.address, accountId, sendAmount)
     .freezeWithSigner(signer);
 
-  const response = await transferTx.executeWithSigner(signer);
-
+  let response;
+  try {
+    await transferTx.signWithOperator(client);
+    response = await transferTx.executeWithSigner(signer);
+  } catch (e) {
+    console.error("Error during token receive:", e);
+    throw new Error("You must accept token transfer transaction");
+  }
   const receipt = await response.getReceipt(client);
 
   const transactionStatusTransfer = receipt.status;
   console.log("Transaction: " + transferTx.toString());
 
   if (transactionStatusTransfer.toString() == SUCCESS_MESSAGE) {
-    console.log(token.name + " token received successfully");
+    console.log(receiveToken.name + " token received successfully");
   } else {
-    throw new Error(token.name + " transfer failed");
+    throw new Error(receiveToken.name + " transfer failed");
   }
+}
+
+async function getClient() {
+  const client = Client.forTestnet();
+  client.setOperator(OPERATOR_ID, OPERATOR_KEY);
+  return client;
 }
 
 async function getSigner() {
