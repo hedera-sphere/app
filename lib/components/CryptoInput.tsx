@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react"
-
 export type CryptoInputProps = {
   max?: number
   maxMessage?: string,
   tokenBalance?: number, // ex. Balance: 1000, 2000
   tokenLogo: React.ReactNode, // <Imagen />
   tokenName: string,
-  initialValue: number
+  value: number
   onChange: (val: number) => void
 }
 export const CryptoInput = ({
@@ -15,15 +13,21 @@ export const CryptoInput = ({
   tokenBalance,
   tokenLogo,
   tokenName,
-  initialValue,
+  value,
   onChange
 }: CryptoInputProps) => {
-  const [value, setValueState] = useState(initialValue)
-  function setValue(val: number){
-    // convert val to two decimals
-  
-    if(val >= 0 && val <= (max ?? 0)){
-      setValueState(val)
+
+  function setValue(newValue: number){
+    newValue = Number(newValue?.toString()?.replace(/^0+/, '') || '0')
+    // convert newValue to two decimals
+    if(max){
+      if(newValue >= 0 && newValue <= (max ?? 0)){
+        onChange(newValue)
+      }  
+    }else{
+      if(newValue >= 0){
+        onChange(newValue)
+      }
     }
   }
 
@@ -31,10 +35,6 @@ export const CryptoInput = ({
     const defaultValue = tokenBalance ?? value;
     setValue(max ?? defaultValue)
   }
-
-  useEffect(()=>{
-    onChange(value)
-  },[value, onChange])
 
   return <div>
     <input
