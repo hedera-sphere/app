@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-type CryptoInputProps = {
+export type CryptoInputProps = {
   max?: number
   maxMessage?: string,
   tokenBalance?: number, // ex. Balance: 1000, 2000
@@ -20,6 +20,8 @@ export const CryptoInput = ({
 }: CryptoInputProps) => {
   const [value, setValueState] = useState(initialValue)
   function setValue(val: number){
+    // convert val to two decimals
+  
     if(val >= 0 && val <= (max ?? 0)){
       setValueState(val)
     }
@@ -37,6 +39,7 @@ export const CryptoInput = ({
   return <div>
     <input
       value={value}
+      min={0}
       type="number"
       onChange={(e) => {
         setValue(Number(e.target.value))
