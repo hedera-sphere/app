@@ -1,6 +1,6 @@
 import HEDERA_DATA from '@/hedera_data.json'
 
-type Token = {
+export type Token = {
   name: string,
   address: string
 }

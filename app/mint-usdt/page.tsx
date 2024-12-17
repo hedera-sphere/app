@@ -1,7 +1,7 @@
 "use client";
 
 import { CryptoInput } from "@/lib/components/CryptoInput";
-import { checkTokenSupport, mintUsdt } from "@/lib/utils/transactions";
+import {  mintUsdt } from "@/lib/utils/transactions";
 import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
 import Image from "next/image";
 import { useState } from "react";
@@ -12,25 +12,26 @@ export default function Home() {
   const [successMsg, setSuccessMsg] = useState<string>("");
 
   async function onSubmit() {
-    // reset messages
-    setErrorMsg("")
-    setSuccessMsg("")
+    try {
+      // reset messages
+      setErrorMsg("")
+      setSuccessMsg("")
 
-    // check if user accepted associate token transaction
-    const tokenSuport = await checkTokenSupport()
-    if (!tokenSuport) {
-      setErrorMsg("You must accept associate token transaction")
-      return
-    }
-    console.log("tokenSuport: ", tokenSuport)
+      // mint usdt and send to user
+      await mintUsdt(amount)
 
-    // mint usdt and send to user
-    const mintSuccess = mintUsdt(amount)
-    if (!mintSuccess) {
-      setErrorMsg("Error minting tokens")
-    }else{
       setSuccessMsg("Tokens minted successfully!!!")
+      setAmount(0)
+    } catch (e) {
+      console.error(e)
+
+      if (e instanceof Error) {
+        setErrorMsg(e.message);
+      } else {
+        setErrorMsg("An unknown error occurred");
+      }
     }
+
   }
 
   return (
@@ -41,7 +42,7 @@ export default function Home() {
       <CryptoInput
         max={MAX_MINT}
         maxMessage={`${MAX_MINT} maxium`}
-        tokenLogo={ <Image src="/usdt.png" alt="usdt" width={25} height={25}/>}
+        tokenLogo={<Image src="/usdt.png" alt="usdt" width={25} height={25} />}
         value={amount}
         onChange={(v: number) => setAmount(v)}
         tokenName=""

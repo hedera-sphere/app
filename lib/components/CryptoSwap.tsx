@@ -11,6 +11,8 @@ export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
   const [usdtAmount, setUsdtAmount] = useState<number>(0);
   const [sphereAmount, setSphereAmount] = useState<number>(0);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [successMsg, setSuccessMsg] = useState<string>("");
 
   async function onChangeCoinAmount(amount: number, tokenName: string) {
     const spherePrice = await getSpherePrice();
@@ -23,9 +25,26 @@ export const CryptoSwap = () => {
     }
   }
 
-  function onSubmit(){
-    if(swapStatus == "buy"){
-      invest(usdtAmount)
+  async function onSubmit() {
+    if (swapStatus == "buy") {
+      try {
+        // reset messages
+        setErrorMsg("")
+        setSuccessMsg("")
+
+        const tokenAmount = await invest(usdtAmount)
+
+        setSuccessMsg(tokenAmount + " HSPHERE100 tokens successfully transfered to your wallet!!!")
+        setUsdtAmount(0)
+        setSphereAmount(0)
+      } catch (e) {
+        console.error(e)
+        if (e instanceof Error) {
+          setErrorMsg(e.message);
+        } else {
+          setErrorMsg("An unknown error occurred");
+        }
+      }
     }
   }
   const USDT_PROPS: CryptoInputProps = {
@@ -64,6 +83,8 @@ export const CryptoSwap = () => {
     <CryptoInput
       {...bottomCoin}
     />
+    {errorMsg && <span style={{ backgroundColor: 'red' }}>{errorMsg}</span>}
+    {successMsg && <span style={{ backgroundColor: 'green' }}>{successMsg}</span>}
     <ConnectWalletVerification>
       <button onClick={onSubmit}>{swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}</button>
     </ConnectWalletVerification>
