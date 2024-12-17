@@ -4,6 +4,9 @@ import { USDT } from "../consts/tokens";
 import HEDERA_DATA from '@/hedera_data.json'
 
 const SPHERE_WALLET_ADRESS = HEDERA_DATA.creatorAccount.accountId;
+const SUCCESS_MESSAGE = "SUCCESS";
+const OPERATOR_ID = "0.0.5274980"; 
+const OPERATOR_KEY = PrivateKey.fromString("302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e");
 export async function mintUsdt(rawAmount: number) {
   if(rawAmount <= 0) return;
   const accountIdString = useWallet.getState().accountId;
@@ -11,17 +14,13 @@ export async function mintUsdt(rawAmount: number) {
   const accountId = AccountId.fromString(accountIdString);
   if (!accountId) return false;
 
-
-  const operatorId = "0.0.5274980"; // Replace with your Hedera testnet account ID
-  const operatorKey = PrivateKey.fromString("302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e"); // Replace with your Hedera testnet private key
   const amountWithDecimals = rawAmount * 100;
   const amount = Long.fromString(amountWithDecimals.toString());
 
   console.log("minting tokens: ", amount)
   // mint tokens
-  const client = Client.forTestnet();
-  client.setOperator(operatorId, operatorKey);
 
+  const client = await getClient();
   const mintTx = await new TokenMintTransaction()
     .setTokenId(USDT.address)
     .setAmount(amount)
@@ -54,6 +53,17 @@ export async function mintUsdt(rawAmount: number) {
   console.log("The transaction transfer status " + transactionStatusTransfer.toString());
 }
 
+async function getClient() {
+  const client = Client.forTestnet();
+  client.setOperator(OPERATOR_ID, OPERATOR_KEY);
+  return client;
+}
+
+// async function mintToken(tokenId: string, amount: Long) {
+//   if (val == '')
+// }
+
+
 export async function checkTokenSupport() {
   const accountIdString = useWallet.getState().accountId;
   if (!accountIdString) return false;
@@ -78,4 +88,3 @@ export async function checkTokenSupport() {
     return false;
   }
 }
-
