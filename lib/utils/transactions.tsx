@@ -8,22 +8,28 @@ const SUCCESS_MESSAGE = "SUCCESS";
 const OPERATOR_ID = "0.0.5274980";
 const OPERATOR_KEY = PrivateKey.fromString("302e020100300506032b6570042204208d9ddfcb9c80cb6f2181c07b44ebed3bfdadb051eadc80b3f94fcf65d629be5e");
 export async function mintUsdt(rawAmount: number) {
-  if (rawAmount <= 0) return;
-  const accountIdString = useWallet.getState().accountId;
-  if (!accountIdString) return false;
-  const accountId = AccountId.fromString(accountIdString);
-  if (!accountId) return false;
+  try {
 
-  const amountWithDecimals = rawAmount * 100;
-  const amount = Long.fromString(amountWithDecimals.toString());
+    if (rawAmount <= 0) return;
+    const accountIdString = useWallet.getState().accountId;
+    if (!accountIdString) return false;
+    const accountId = AccountId.fromString(accountIdString);
+    if (!accountId) return false;
 
-  console.log("minting tokens: ", amount)
-  // mint tokens
-  const tokenMintedReceipt = await mintToken(USDT.address, amount);
-  console.log("Token minted: ", tokenMintedReceipt);
-  if (tokenMintedReceipt) {
-    const sendTokensReceipt = await sendTokens(accountId, amount);
-    console.log("Tokens sent: ", sendTokensReceipt);
+    const amountWithDecimals = rawAmount * 100;
+    const amount = Long.fromString(amountWithDecimals.toString());
+
+    console.log("minting tokens: ", amount)
+    // mint tokens
+    const tokenMintedReceipt = await mintToken(USDT.address, amount);
+    console.log("Token minted: ", tokenMintedReceipt);
+    if (tokenMintedReceipt) {
+      const sendTokensReceipt = await sendTokens(accountId, amount);
+      console.log("Tokens sent: ", sendTokensReceipt);
+    }
+  } catch (error) {
+    console.error("Error during usdt minting:", error);
+    return false;
   }
 }
 
