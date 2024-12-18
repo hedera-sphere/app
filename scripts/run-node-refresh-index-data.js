@@ -3,22 +3,70 @@ import axios from "axios";
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+const EXECUTION_INTERVAL_MINUTES = 0.1;
+const DIFERENCE_BETWEEN_DATA_UPSERT = 30;
 // Environment variables for security
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ""; // Server-side only
 
 const supabaseServer = createClient(supabaseUrl, supabaseServiceKey)
 
-async function upsertAppData(dataToUpsert) {
-  const { data, error } = await supabaseServer
-    .from('appdata')
-    .upsert(dataToUpsert, { onConflict: ['id'] }); // Use 'id' as the conflict target
+async function upsertAppData(rawData) {
+  try {
+    const mostRecentValue = getMostRecentData(rawData);
+    console.log("Most Recent Value:", mostRecentValue.value);
 
-  if (error) {
-    console.error('Error upserting data:', error);
-  } else {
-    console.log('Upsert successful. Data:', data);
+    const difference = calculateDifference(rawData);
+    console.log("Difference between Latest and Oldest:", difference);
+
+    const dataToUpsert = {
+      id: 1,
+      lastUpdateTime: new Date(),
+      tokenPrice: mostRecentValue.value,
+      percentageChange7d: difference
+    }
+    // Fetch the existing row with the same id
+    const { data: existingData, error: fetchError } = await supabaseServer
+      .from('appdata')
+      .select('lastUpdateTime')
+      .eq('id', dataToUpsert.id)
+      .single(); // Fetch a single row (assuming `id` is unique)
+
+    if (fetchError) {
+      if (fetchError.code === 'PGRST116') {
+        // If the row does not exist, proceed with the upsert
+        console.log('No existing data found. Proceeding with upsert...');
+      } else {
+        throw new Error(`Error fetching existing data: ${fetchError.message}`);
+      }
+    }
+
+    // Check if the lastUpdateTime is more than 1 hour newer
+    if (existingData) {
+      const existingTime = new Date(existingData.lastUpdateTime);
+      const newTime = new Date(dataToUpsert.lastUpdateTime);
+      const timeDifferenceInMins = (newTime - existingTime) / (1000 * 60 * DIFERENCE_BETWEEN_DATA_UPSERT); // Time difference in mins
+
+      if (timeDifferenceInMins <= 1) {
+        console.log('Upsert skipped: lastUpdateTime is not more than 1 minute newer.');
+        return;
+      }else{
+        console.log("Upsert appdata executed")
+      }
+    }
+
+    // Proceed with upsert if no conflict or valid time difference
+    const { data, error } = await supabaseServer
+      .from('appdata')
+      .upsert(dataToUpsert, { onConflict: ['id'] }); // Use 'id' as the conflict target
+
+    if (error) {
+      console.error('Error upserting data:', error);
+    } else {
+      console.log('Upsert successful. Data:', data);
+    }
+  } catch (error) {
+    console.error('Error in upsertAppData:', error.message);
   }
 }
 
@@ -61,28 +109,12 @@ async function fetchIndexData() {
     })
 
     if (response.status != 200) {
-      console.log(response)
       throw new Error('Failed to fetch data');
     }
 
     const data = await response.data;
-    console.log(data)
-    console.log("=========== data above ==========")
 
-    const mostRecentValue = getMostRecentData(data);
-    console.log("Most Recent Value:", mostRecentValue);
-
-    const difference = calculateDifference(data);
-    console.log("Difference between Latest and Oldest:", difference);
-
-    const appData = {
-      id: 1,
-      lastUpdateTime: new Date(),
-      tokenPrice: mostRecentValue.value,
-      percentageChange7d: difference
-    }
-
-    await upsertAppData(appData)
+    await upsertAppData(data)
   } catch (error) {
     console.log(error)
     return {
@@ -93,8 +125,23 @@ async function fetchIndexData() {
 }
 
 
-console.log("start fetching")
-await fetchIndexData();
-console.log("end fetching")
+async function startFetching() {
+  while (true) {
+    try {
+      const executedAt = new Date().toISOString();
+      console.log(`Start fetching at: ${executedAt}`);
+      
+      await fetchIndexData(); // Your function to fetch data
+      
+      console.log(`End fetching at: ${new Date().toISOString()}`);
+    } catch (error) {
+      console.error("Error in fetch loop:", error.message);
+    }
 
+    // Wait for 5 minutes before running again
+    await new Promise(resolve => setTimeout(resolve, EXECUTION_INTERVAL_MINUTES * 60 * 1000)); // 5 minutes
+  }
+}
 
+// Start the loop
+startFetching();
