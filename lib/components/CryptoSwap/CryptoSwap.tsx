@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { CryptoInput, CryptoInputProps } from "./CryptoInput"
 import Image from "next/image";
-import { SPHERE_100, USDT } from "../../consts/tokens";
-import { ConnectWalletVerification } from "../../wallet/ConnectWalletVerification";
-import { convertTo2Decimals, getSpherePrice, invest, sellInvestment } from "../../utils/transactions";
-import { AVAILABLE_STATUS, StatusPopupState } from "../StatusPopup";
+import { SPHERE_100, USDT } from "@/lib/consts/tokens";
+import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
+import { convertTo2Decimals, getSpherePrice, invest, sellInvestment } from "@/lib/utils/transactions";
+import { AVAILABLE_STATUS, StatusPopupState } from "@/lib/components/StatusPopup";
 import { useShallow } from "zustand/shallow";
 
 export const CryptoSwap = () => {
