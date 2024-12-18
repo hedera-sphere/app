@@ -1,4 +1,4 @@
-import { AccountId, Client, Hbar, Long, PrivateKey, TokenAssociateTransaction, TokenMintTransaction, TransferTransaction } from "@hashgraph/sdk";
+import { AccountId, Client, Hbar, Long, PrivateKey, TokenAssociateTransaction, TokenBurnTransaction, TokenMintTransaction, TransferTransaction } from "@hashgraph/sdk";
 import { hashconnect, useWallet } from "../wallet/useWallet";
 import { SPHERE_100, Token, USDT } from "../consts/tokens";
 import HEDERA_DATA from '@/hedera_data.json'
@@ -50,7 +50,7 @@ export async function invest(rawAmount: number): Promise<TransactionResponse> {
   // associate sphere token
   const tokenSupport = await checkTokenSupport(SPHERE_100.address);
   if (!tokenSupport) throw new Error(`You must accept associate token ${SPHERE_100.name} with tokenid ${SPHERE_100.address} transaction`);
-  
+
   // mint sphere tokens to transfer
   const mintTokensReceipt = await mintToken(SPHERE_100.address, amountSphereTokensToTransfer);
   console.log("Tokens minted: ", mintTokensReceipt);
@@ -59,7 +59,7 @@ export async function invest(rawAmount: number): Promise<TransactionResponse> {
 
   // receiving usdt tokens
   return await swapTokens(accountId, amount, amountSphereTokensToTransfer, USDT, SPHERE_100);
-  
+
 }
 
 export async function sellInvestment(rawAmount: number): Promise<TransactionResponse> {
@@ -79,10 +79,16 @@ export async function sellInvestment(rawAmount: number): Promise<TransactionResp
   const mintTokensReceipt = await mintToken(USDT.address, amountUsdtTokensToTransfer);
   console.log("Tokens minted: ", mintTokensReceipt);
 
+
   await decreaseHsphereAmount(rawAmount)
 
   // swap sphere tokens
-  return await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
+  const swapRes = await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
+
+  // burn sphere100 tokens
+  await burnSphere100(amount)
+
+  return swapRes;
 }
 
 export async function getSpherePrice(): Promise<number> {
@@ -124,7 +130,37 @@ async function mintToken(tokenId: string, amount: Long) {
     console.log("Token minted failed");
     throw new Error("Token minted failed please contact the development team");
   }
+}
 
+async function burnSphere100(amount: Long) {
+  try {
+
+    const client = await getClient();
+
+    const mintTx = await new TokenBurnTransaction()
+      .setTokenId(SPHERE_100.address)
+      .setAmount(amount)
+      .setMaxTransactionFee(new Hbar(10))
+      .execute(client);
+
+
+    //Request the receipt of the transaction
+    const receipt = await mintTx.getReceipt(client);
+
+    //Get the transaction consensus status
+    const transactionStatus = receipt.status;
+
+    console.log("Transaction: " + mintTx.toString());
+
+    if (transactionStatus.toString() == SUCCESS_MESSAGE) {
+      console.log("Token burned successfully");
+    } else {
+      console.log("Token burned failed");
+      throw new Error("Token burned failed please contact the development team");
+    }
+  } catch (e) {
+    console.error("Error happened burning sphere tokens" + e)
+  }
 }
 
 export async function sendTokens(accountId: AccountId, amount: Long, token: Token) {
@@ -154,11 +190,11 @@ export async function sendTokens(accountId: AccountId, amount: Long, token: Toke
 
 export async function swapTokens(
   accountId: AccountId,
-   receiveAmount: Long, 
-   sendAmount: Long,
-    receiveToken: Token, 
-    sendToken: Token
-  ): Promise<TransactionResponse> {
+  receiveAmount: Long,
+  sendAmount: Long,
+  receiveToken: Token,
+  sendToken: Token
+): Promise<TransactionResponse> {
   const signer = await getSigner();
   const client = await getClient();
 
