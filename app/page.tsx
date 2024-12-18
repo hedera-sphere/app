@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AppData, CryptoData, getAppData, getSortedCryptoData } from "@/lib/utils/data";
-import { CryptoSwap } from "@/lib/components/CryptoSwap/CryptoSwap";
+import { AppData, CryptoData, getAppData, getHistoricPrices, getSortedCryptoData, HistoricalPrice } from "@/lib/utils/data";
+import { CryptoSwap } from "@/lib/components/CryptoSwap";
 import { HeroSection } from "@/lib/components/HeroSection";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
@@ -17,19 +17,33 @@ export default function Home() {
     percentageChange7d: 0,
     tokenPrice: 0
   })
- 
-  async function fetchData(){
-    const sortedCryptos = await getSortedCryptoData()
-    setCryptosList(sortedCryptos);
-    const appData = await getAppData()
-    setAppData(appData)
+  const [historicPrices, setHistoricPrices] = useState<HistoricalPrice[]>([])
+  async function fetchData() {
+    async function setSortedCryptosState() {
+      const sortedCryptos = await getSortedCryptoData()
+      setCryptosList(sortedCryptos);
+    }
+
+    async function setAppDataState() {
+      const appData = await getAppData()
+      setAppData(appData)
+    }
+
+    async function setHistoricPricesState() {
+      const historicPricesData = await getHistoricPrices()
+      setHistoricPrices(historicPricesData)
+    }
+
+    setSortedCryptosState()
+    setAppDataState()
+    setHistoricPricesState()
   }
   console.log("appData", appData)
-  useEffect(()=>{
+  console.log("historicPrices", historicPrices)
+  useEffect(() => {
     // get all cryptodata items
     fetchData()
   },[]);
-
   return (
     <main className={styles.page}>
       <HeroSection />
@@ -115,10 +129,10 @@ export default function Home() {
 
         
       <div>index fund cryptos</div>
-      {(cryptosList ?? [])?.map((c)=>{
+      {(cryptosList ?? [])?.map((c) => {
         return <div key={c.symbol}>
           name: {c.name}, symbol: {c.symbol}, portfolio percentage: {c.weight}
-          </div>
+        </div>
       })}
     </main>
   );
