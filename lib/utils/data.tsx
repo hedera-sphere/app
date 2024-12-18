@@ -48,15 +48,15 @@ export async function getAppData(): Promise<AppData> {
       .single()
 
     if (error) {
-      console.error('Error fetching sorted cryptodata:', error);
+      console.error('Error fetching sorted appdata:', error);
     } else {
-      console.log('Fetched and sorted cryptodata:', data);
+      console.log('Fetched and sorted appdata:', data);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return data as any as AppData;
     }
   } catch (error) {
-    console.error('Error in getSortedCryptoData:', error);
+    console.error('Error in getSortedappdata:', error);
   }
   return {
     hsphereamount: 0,
@@ -64,6 +64,25 @@ export async function getAppData(): Promise<AppData> {
     percentageChange7d: 0,
     tokenPrice: 0
   }
+}
+
+export async function getHistoricPrices(): Promise<HistoricalPrice[]>{
+  try {
+    const { data, error } = await supabaseBrowser
+      .from('historicprice')
+      .select('*') // Get all columns
+      // .order('date', { ascending: false }); // Sort by 'weight' in descending order
+
+    if (error) {
+      console.error('Error fetching sorted historic prices:', error);
+    } else {
+      console.log('Fetched and sorted historic prices:', data);
+      return data;
+    }
+  } catch (error) {
+    console.error('Error in getSortedHistoric prices:', error);
+  }
+  return []
 }
 
 export async function increaseHsphereAmount(amount: number) {
