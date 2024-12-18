@@ -3,36 +3,27 @@
 import { CryptoSwap } from "@/lib/components/CryptoSwap";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabase/client";
-import { CryptoData } from "@/lib/utils/data";
+import { AppData, CryptoData, getAppData, getSortedCryptoData } from "@/lib/utils/data";
 
 export default function Home() {
   const [cryptosList, setCryptosList] = useState<CryptoData[]>([]);
-  async function getSortedCryptoData(): Promise<CryptoData[]> {
-    try {
-      const { data, error } = await supabaseBrowser
-        .from('cryptodata')
-        .select('symbol, name, weight') // Get all columns
-        .order('weight', { ascending: false }); // Sort by 'weight' in descending order
-  
-      if (error) {
-        console.error('Error fetching sorted cryptodata:', error);
-      } else {
-        console.log('Fetched and sorted cryptodata:', data);
-        return data;
-      }
-    } catch (error) {
-      console.error('Error in getSortedCryptoData:', error);
-    }
-    return []
+  const [appData, setAppData] = useState<AppData>({
+    hsphereamount: 0,
+    lastUpdateTime: 0,
+    percentageChange7d: 0,
+    tokenPrice: 0
+  })
+ 
+  async function fetchData(){
+    const sortedCryptos = await getSortedCryptoData()
+    setCryptosList(sortedCryptos);
+    const appData = await getAppData()
+    setAppData(appData)
   }
-  async function fetchCryptoData(){
-    const data = await getSortedCryptoData()
-    setCryptosList(data);
-  }
+  console.log("appData", appData)
   useEffect(()=>{
     // get all cryptodata items
-    fetchCryptoData()
+    fetchData()
   },[])
   return (
     <div className={styles.page}>
