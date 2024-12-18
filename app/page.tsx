@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { AppData, CryptoData, getAppData, getHistoricPrices, getSortedCryptoData, HistoricalPrice } from "@/lib/utils/data";
 import { CryptoSwap } from "@/lib/components/CryptoSwap";
 import { HeroSection } from "@/lib/components/HeroSection";
+import { Section } from "@/lib/components/Section";
+import { ContentCard } from "@/lib/components/ContentCard";
 
 import styles from "./page.module.scss";
 
@@ -41,17 +43,97 @@ export default function Home() {
   useEffect(() => {
     // get all cryptodata items
     fetchData()
-  }, [])
+  },[]);
   return (
-    <div className={styles.page}>
+    <main className={styles.page}>
       <HeroSection />
-      <CryptoSwap />
+      <Section>
+        <ContentCard size={8}>
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+          Table
+          <br />
+        </ContentCard>
+        <ContentCard size={4}>
+            <CryptoSwap />
+        </ContentCard>
+        <ContentCard size={8}>
+            Graph
+          </ContentCard>
+          <ContentCard size={4}>
+            Price?
+          </ContentCard>
+          <ContentCard size={6}>
+            Chart 1
+          </ContentCard>
+          <ContentCard size={6}>
+            Chart 2
+          </ContentCard>
+      </Section>
+
+        
       <div>index fund cryptos</div>
       {(cryptosList ?? [])?.map((c) => {
         return <div key={c.symbol}>
           name: {c.name}, symbol: {c.symbol}, portfolio percentage: {c.weight}
         </div>
       })}
-    </div>
+    </main>
   );
 }
