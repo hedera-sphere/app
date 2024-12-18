@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // transpilePackages: ['hashconnect','@hashgraph/sdk','@hashgraph/hedera-wallet-connect'],
 };
 
 export default nextConfig;

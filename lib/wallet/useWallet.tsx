@@ -1,10 +1,10 @@
 import { LedgerId } from "@hashgraph/sdk";
-import { DappMetadata, HashConnect, HashConnectConnectionState, SessionData } from "hashconnect";
+import type { DappMetadata, HashConnect, HashConnectConnectionState, SessionData } from "hashconnect";
 import { create } from "zustand";
 interface WalletData {
   walletConnected: boolean,
   accountId: string | null,
-  state: HashConnectConnectionState,
+  state: HashConnectConnectionState | "Disconnected",
   pairingData: SessionData | null,
   updateState: (newState: Partial<WalletData>) => void
 }
@@ -12,7 +12,7 @@ interface WalletData {
 export const useWallet = create<WalletData>((set) => ({
   walletConnected: false,
   accountId: null,
-  state: HashConnectConnectionState.Disconnected,
+  state: "Disconnected",
   pairingData: null,
   updateState: (newState: Partial<WalletData>) => set((oldState: WalletData) => {
     const state = {
@@ -41,6 +41,7 @@ const appMetaData: DappMetadata = {
 export let hashconnect: HashConnect;
 
 export async function connectWallet() {
+  const {HashConnect} = await import ("hashconnect");
   hashconnect = new HashConnect(LedgerId.TESTNET, "fdb642f05db3cbb2c4a547af58fd4143", appMetaData);
 
   setUpHashConnectEvents()
