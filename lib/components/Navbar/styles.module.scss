@@ -1,0 +1,58 @@
+.navbar {
+    background-color: #FFFFFF;
+    position: fixed;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-shadow: 0 4px 15px 0 rgba(75, 83, 91, 0.02);
+
+    .container {
+        .content {
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+
+            .left {
+                position: relative;
+                flex: 0 1 auto;
+                .logo {
+                    height: 100%;
+                    width: auto;
+
+                }
+            }
+            .center {
+                position: relative;
+                flex: 1 0 auto;
+
+                .navLinks {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    gap: 2rem;
+
+                    a {
+                        color: #000;
+                        font-size: .9rem;
+                        font-weight: 400;
+                        line-height: 1;
+                    }
+                }
+            }
+            .right {
+                position: relative;
+                flex: 0 1 auto;
+
+                .connectWallet {
+                    color: #000;
+                }
+            }
+        }
+    }
+}

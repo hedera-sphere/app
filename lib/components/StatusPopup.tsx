@@ -52,7 +52,7 @@ export const StatusPopup = () => {
   return (
     <div>
       <Modal
-        visible={isVisible}
+        open={isVisible}
         footer={null}
         onCancel={handleClose}
         maskClosable={false}
@@ -61,15 +61,15 @@ export const StatusPopup = () => {
           maxHeight: '100vh',
           maxWidth: '50%',
           marginTop: '20vh',
-        }}
-        bodyStyle={{
-          height: 'auto',
-          paddingTop: '5%',
-          paddingBottom: '5%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
+          body: {
+            height: 'auto',
+            paddingTop: '5%',
+            paddingBottom: '5%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }
         }}
         wrapClassName="status-modal"
         closable={status === AVAILABLE_STATUS.SUCCESS || status === AVAILABLE_STATUS.ERROR}

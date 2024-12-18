@@ -17,11 +17,13 @@
     "@supabase/supabase-js": "^2.47.9",
     "antd": "^5.22.5",
     "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
     "dotenv": "^16.4.7",
     "hashconnect": "^3.0.13",
     "next": "15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sass": "^1.83.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

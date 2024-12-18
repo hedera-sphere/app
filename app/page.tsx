@@ -1,9 +1,11 @@
 "use client";
 
-import { CryptoSwap } from "@/lib/components/CryptoSwap";
-import styles from "./page.module.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppData, CryptoData, getAppData, getSortedCryptoData } from "@/lib/utils/data";
+import { CryptoSwap } from "@/lib/components/CryptoSwap";
+import { HeroSection } from "@/lib/components/HeroSection";
+
+import styles from "./page.module.scss";
 
 export default function Home() {
   const [cryptosList, setCryptosList] = useState<CryptoData[]>([]);
@@ -27,6 +29,7 @@ export default function Home() {
   },[])
   return (
     <div className={styles.page}>
+      <HeroSection />
       <CryptoSwap />
       <div>index fund cryptos</div>
       {(cryptosList ?? [])?.map((c)=>{
