@@ -45,7 +45,7 @@ export async function invest(rawAmount: number): Promise<TransactionResponse> {
 
   // calculate sphere amount
   const spherePrice = await getSpherePrice();
-  const rawAmountSphereTokensToTransfer = rawAmount * spherePrice;
+  const rawAmountSphereTokensToTransfer = rawAmount / spherePrice;
   const amountSphereTokensToTransfer = createHederaPrice(rawAmountSphereTokensToTransfer);
   // associate sphere token
   const tokenSupport = await checkTokenSupport(SPHERE_100.address);
@@ -72,7 +72,7 @@ export async function sellInvestment(rawAmount: number): Promise<TransactionResp
 
   // calculate usdt amount
   const spherePrice = await getSpherePrice();
-  const rawAmountUsdtTokensToTransfer = (rawAmount / spherePrice);
+  const rawAmountUsdtTokensToTransfer = (rawAmount * spherePrice);
   const amountUsdtTokensToTransfer = createHederaPrice(rawAmountUsdtTokensToTransfer);
 
   // mint usdt tokens to transfer

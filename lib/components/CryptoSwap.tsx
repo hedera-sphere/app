@@ -21,10 +21,10 @@ export const CryptoSwap = () => {
     const spherePrice = await getSpherePrice();
     if (tokenName == USDT.name) {
       setUsdtAmount(amount)
-      setSphereAmount(convertTo2Decimals(amount * spherePrice))
+      setSphereAmount(convertTo2Decimals(amount / spherePrice))
     } else {
       setSphereAmount(amount)
-      setUsdtAmount(convertTo2Decimals(amount / spherePrice))
+      setUsdtAmount(convertTo2Decimals(amount * spherePrice))
     }
   }
 
