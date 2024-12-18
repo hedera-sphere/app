@@ -2,6 +2,7 @@ import { AccountId, Client, Hbar, Long, PrivateKey, TokenAssociateTransaction, T
 import { hashconnect, useWallet } from "../wallet/useWallet";
 import { SPHERE_100, Token, USDT } from "../consts/tokens";
 import HEDERA_DATA from '@/hedera_data.json'
+import { getAppData } from "./data";
 
 export type TransactionResponse = {
   txId: string;
@@ -81,7 +82,8 @@ export async function sellInvestment(rawAmount: number): Promise<TransactionResp
 }
 
 export async function getSpherePrice(): Promise<number> {
-  return 1.5;
+  const appData = await getAppData();
+  return appData.tokenPrice;
 }
 
 function createHederaPrice(amount: number): Long {
