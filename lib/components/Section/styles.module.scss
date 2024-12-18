@@ -1,0 +1,15 @@
+.section {
+    position: relative;
+    background-color: var(--background);
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    
+    .container {
+        position: relative;
+
+        .content {
+            position: relative;
+            overflow-y: auto;
+        }
+    }
+}
