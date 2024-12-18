@@ -45,6 +45,7 @@ export async function getAppData(): Promise<AppData> {
       .from('appdata')
       .select('*')
       .eq('id', 1)
+      .single()
 
     if (error) {
       console.error('Error fetching sorted cryptodata:', error);
@@ -62,5 +63,43 @@ export async function getAppData(): Promise<AppData> {
     lastUpdateTime: 0,
     percentageChange7d: 0,
     tokenPrice: 0
+  }
+}
+
+export async function increaseHsphereAmount(amount: number) {
+  try {
+    const appData = await getAppData()
+    const totalAmount = appData.hsphereamount + amount
+    console.log(appData)
+    console.log("amount", amount)
+    console.log("====", appData.hsphereamount)
+    console.log("totalAmount", totalAmount)
+    const data = {
+      id: 1, // The record ID you are updating
+      hsphereamount: totalAmount
+    }
+    await supabaseBrowser
+      .from('appdata')
+      .upsert([data], { onConflict: 'id' }) // Ensure conflict resolution happens only on the 'id' column
+      
+  } catch (e) {
+    console.log("Failed to increase hsphere", e)
+  }
+}
+
+export async function decreaseHsphereAmount(amount: number) {
+  try {
+    const appData = await getAppData()
+    const totalAmount = appData.hsphereamount - amount
+    const data = {
+      id: 1, // The record ID you are updating
+      hsphereamount: totalAmount
+    }
+    await supabaseBrowser
+      .from('appdata')
+      .upsert([data], { onConflict: 'id' }) // Ensure conflict resolution happens only on the 'id' column
+      
+  } catch (e) {
+    console.log("Failed to increase hsphere", e)
   }
 }
