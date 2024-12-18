@@ -2,7 +2,7 @@ import { AccountId, Client, Hbar, Long, PrivateKey, TokenAssociateTransaction, T
 import { hashconnect, useWallet } from "../wallet/useWallet";
 import { SPHERE_100, Token, USDT } from "../consts/tokens";
 import HEDERA_DATA from '@/hedera_data.json'
-import { getAppData } from "./data";
+import { decreaseHsphereAmount, getAppData, increaseHsphereAmount } from "./data";
 
 export type TransactionResponse = {
   txId: string;
@@ -55,6 +55,8 @@ export async function invest(rawAmount: number): Promise<TransactionResponse> {
   const mintTokensReceipt = await mintToken(SPHERE_100.address, amountSphereTokensToTransfer);
   console.log("Tokens minted: ", mintTokensReceipt);
 
+  await increaseHsphereAmount(rawAmount)
+
   // receiving usdt tokens
   return await swapTokens(accountId, amount, amountSphereTokensToTransfer, USDT, SPHERE_100);
   
@@ -76,6 +78,8 @@ export async function sellInvestment(rawAmount: number): Promise<TransactionResp
   // mint usdt tokens to transfer
   const mintTokensReceipt = await mintToken(USDT.address, amountUsdtTokensToTransfer);
   console.log("Tokens minted: ", mintTokensReceipt);
+
+  await decreaseHsphereAmount(rawAmount)
 
   // swap sphere tokens
   return await swapTokens(accountId, amount, amountUsdtTokensToTransfer, SPHERE_100, USDT);
