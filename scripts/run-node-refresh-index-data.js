@@ -71,7 +71,8 @@ async function upsertAppData(rawData) {
     for(let crypto of (mostRecentValue.constituents ?? [])){
       upsertCryptoData(crypto)
     }
-    removeOldCryptoData()
+    await upsertHistoricPrice(mostRecentValue.update_time, mostRecentValue.value)
+    await removeOldCryptoData()
     console.log("Finished usperting crypto data")
   } catch (error) {
     console.error('Error in upsertAppData:', error.message);
@@ -102,6 +103,27 @@ async function upsertCryptoData(cryptoData) {
   }
 }
 
+async function upsertHistoricPrice(date, price) {
+  const dataToUpsert = {
+    date,
+    price,
+  };
+
+  try {
+    const { data, error } = await supabaseServer
+      .from('historicprice')
+      .upsert(dataToUpsert, { onConflict: ['date'] }); // Use 'date' as the conflict target
+
+    if (error) {
+      console.error('Error upserting historic price:', error);
+    } else {
+      console.log(`Upsert successful historic price. ${dataToUpsert.date} Data:`, data);
+    }
+  } catch (error) {
+    console.error('Error in upsert historic price:', error.message);
+  }
+}
+
 async function removeOldCryptoData() {
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - REMOVE_CRYPTO_DATA_AT_DAYS); // Subtract 1 day
@@ -116,7 +138,7 @@ async function removeOldCryptoData() {
     if (error) {
       console.error('Error deleting old cryptodata:', error);
     } else {
-      console.log('Deleted old cryptodata. Rows affected:', data.length);
+      console.log('Deleted old cryptodata. Rows affected:', data?.length ?? null);
     }
   } catch (error) {
     console.error('Error in removeOldCryptoData:', error.message);
