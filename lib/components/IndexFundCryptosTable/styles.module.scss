@@ -48,6 +48,30 @@
     }
 
     .footer {
+        padding: 1.25rem 1.5rem 0 1.25rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        justify-content: space-between;
 
+        .left {
+            flex: 0 0 auto;
+        }
+        .center {
+            flex: 1 0 auto;
+
+            p {
+                font-size: 1rem;
+                font-weight: 400;
+                color: #424242;
+                text-align: center;
+                line-height: 1;
+                margin-bottom: 0;
+            }
+        }
+        .right {
+            flex: 0 0 auto;
+        }
     }
 }

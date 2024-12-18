@@ -61,32 +61,25 @@ export const IndexFundCryptosTable = () => {
                 })}
             </div>
             <div className={styles.footer}>
-                <button 
-                    onClick={handleFirstPage}
-                    disabled={page === 0}
-                >
-                    First
-                </button>
-                <button 
-                    onClick={handlePreviousPage}
-                    disabled={page === 0}
-                >
-                    Previous
-                </button>
-                <span>Page {page + 1} of {totalPages}</span>
-                <button 
-                    onClick={handleNextPage}
-                    disabled={page === totalPages - 1}
-                >
-                    Next
-                </button>
-                <button 
-                    onClick={handleLastPage}
-                    disabled={page === totalPages - 1}
-                >
-                    Last
-                </button>
-
+                <div className={styles.left}>
+                    <button type='button' onClick={handleFirstPage} disabled={page === 0}>
+                        First
+                    </button>
+                    <button type='button' onClick={handlePreviousPage} disabled={page === 0}>
+                        Previous
+                    </button>
+                </div>
+                <div className={styles.center}>
+                    <p>Page {page + 1} of {totalPages}</p>
+                </div>
+                <div className={styles.right}>
+                    <button type='button' onClick={handleNextPage} disabled={page === totalPages - 1}>
+                        Next
+                    </button>
+                    <button type='button' onClick={handleLastPage} disabled={page === totalPages - 1}>
+                        Last
+                    </button>
+                </div>
             </div>
         </div>
     </ContentCard>
