@@ -8,6 +8,7 @@ export type AppData = {
   percentageChange7d: number;
   tokenPrice: number
   lastUpdateTime: number // timestamp
+  hsphereamount: number
 }
 
 export type HistoricalPrice = {
@@ -22,6 +23,7 @@ export async function getAppData(): Promise<AppData> {
   return {
     percentageChange7d: 7.7,
     tokenPrice: 1.5,
-    lastUpdateTime: 9232332
+    lastUpdateTime: 9232332,
+    hsphereamount: 1
   }
 }

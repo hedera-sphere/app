@@ -3,8 +3,9 @@ import axios from "axios";
 import dotenv from 'dotenv';
 
 dotenv.config();
-const EXECUTION_INTERVAL_MINUTES = 0.1;
-const DIFERENCE_BETWEEN_DATA_UPSERT = 30;
+const EXECUTION_INTERVAL_MINUTES = 60;
+const DIFERENCE_BETWEEN_DATA_UPSERT = 1
+const REMOVE_CRYPTO_DATA_AT_DAYS = 1;
 // Environment variables for security
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? ""; // Server-side only
@@ -65,8 +66,60 @@ async function upsertAppData(rawData) {
     } else {
       console.log('Upsert successful. Data:', data);
     }
+
+    console.log("Upserting crypto data")
+    for(let crypto of (mostRecentValue.constituents ?? [])){
+      upsertCryptoData(crypto)
+    }
+    removeOldCryptoData()
+    console.log("Finished usperting crypto data")
   } catch (error) {
     console.error('Error in upsertAppData:', error.message);
+  }
+}
+
+async function upsertCryptoData(cryptoData) {
+  const dataToUpsert = {
+    symbol: cryptoData.symbol,
+    name: cryptoData.name,
+    weight: cryptoData.weight,
+    created_at: new Date().toISOString(), // Use current timestamp
+  };
+  console.log("data to insert", dataToUpsert)
+
+  try {
+    const { data, error } = await supabaseServer
+      .from('cryptodata')
+      .upsert(dataToUpsert, { onConflict: ['symbol'] }); // Use 'symbol' as the conflict target
+
+    if (error) {
+      console.error('Error upserting cryptodata:', error);
+    } else {
+      console.log(`Upsert successful id. ${dataToUpsert.symbol} Data:`, data);
+    }
+  } catch (error) {
+    console.error('Error in upsertCryptoData:', error.message);
+  }
+}
+
+async function removeOldCryptoData() {
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - REMOVE_CRYPTO_DATA_AT_DAYS); // Subtract 1 day
+  const oneDayAgoISO = oneDayAgo.toISOString();
+
+  try {
+    const { data, error } = await supabaseServer
+      .from('cryptodata')
+      .delete()
+      .lt('created_at', oneDayAgoISO); // Delete where created_at is less than one day ago
+
+    if (error) {
+      console.error('Error deleting old cryptodata:', error);
+    } else {
+      console.log('Deleted old cryptodata. Rows affected:', data.length);
+    }
+  } catch (error) {
+    console.error('Error in removeOldCryptoData:', error.message);
   }
 }
 
