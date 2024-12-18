@@ -52,7 +52,7 @@ export const StatusPopup = () => {
   return (
     <div>
       <Modal
-        visible={isVisible}
+        open={isVisible}
         footer={null}
         onCancel={handleClose}
         maskClosable={false}
