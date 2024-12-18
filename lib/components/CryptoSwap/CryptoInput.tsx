@@ -1,3 +1,6 @@
+import React from "react";
+import styles from "./styles.module.scss";
+
 export type CryptoInputProps = {
   max?: number
   maxMessage?: string,
@@ -36,27 +39,33 @@ export const CryptoInput = ({
     setValue(max ?? defaultValue)
   }
 
-  return <div>
-    <input
-      value={value}
-      min={0}
-      step={1}
-      type="number"
-      onChange={(e) => {
-        const inputValue = e.target.value;
-        // Remove decimals by converting to an integer
-        const intValue = Math.floor(Number(inputValue));
-        setValue(intValue >= 0 ? intValue : 0); // Ensure non-negative values
-      }}
-    />
-    <div>
-      <div>
-        {tokenLogo}
-        <span>{tokenName}</span>
-      </div>
-      <div>
-        {maxMessage && <span onClick={setMax}><u>{maxMessage}</u></span>}
+  return (
+    <div className={styles.cryptoInput}>
+      <div className={styles.content}>
+        <div className={styles.top}>
+          <input
+            title="Input"
+            value={value}
+            placeholder="0"
+            min={0}
+            step={1}
+            type="number"
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              // Remove decimals by converting to an integer
+              const intValue = Math.floor(Number(inputValue));
+              setValue(intValue >= 0 ? intValue : 0); // Ensure non-negative values
+            }}
+          />
+          <div className={styles.token}>
+            <span className={styles.logo}>{tokenLogo}</span>
+            <span className={styles.name}>{tokenName}</span>
+          </div>
+        </div>
+        <div className={styles.balance}>
+          {maxMessage && <button type="button" className={styles.maxButton} onClick={setMax}>{maxMessage}<span className={styles.max}>max</span></button>}
+        </div>
       </div>
     </div>
-  </div>
+  );
 }

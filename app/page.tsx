@@ -110,9 +110,7 @@ export default function Home() {
           Table
           <br />
         </ContentCard>
-        <ContentCard size={4}>
-            <CryptoSwap />
-        </ContentCard>
+        <CryptoSwap />
         <ContentCard size={8}>
             Graph
           </ContentCard>
