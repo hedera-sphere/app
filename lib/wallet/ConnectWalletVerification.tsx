@@ -2,13 +2,14 @@
 
 import { useShallow } from "zustand/shallow";
 import { connectWallet, useWallet } from "./useWallet";
-import Image from "next/image";
 
 type ConnectWalletVerificationProps = {
   children: React.ReactNode
+  cn?: string;
 }
 const ConnectWalletVerification = ({
-  children
+  children,
+  cn
 }: ConnectWalletVerificationProps) => {
 
   const { walletConnected, pairingData } = useWallet(useShallow((s) => ({
@@ -18,10 +19,9 @@ const ConnectWalletVerification = ({
 
   console.log(pairingData)
 
-  const btnConnectWallet = <div onClick={connectWallet}>
+  const btnConnectWallet = <button type="button" className={cn} onClick={connectWallet}>
     <span>Connect wallet</span>
-    <Image src="/hashpack.png" alt="hashpack" width={25} height={25} />
-  </div>
+  </button>
 
   return <>
     {walletConnected ? children : btnConnectWallet}

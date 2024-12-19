@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { NavConnectWallet } from '@/lib/wallet/NavConnectWallet';
 import { StatusPopup } from '@/lib/components/StatusPopup';
 import styles from './styles.module.scss';
+import pageStyles from '@/app/page.module.scss';
 
 export const Navbar = () => {
   return (
@@ -28,14 +29,14 @@ export const Navbar = () => {
                         <Link href={"/about"}>
                             About
                         </Link>
-                        <Link href={"/portafolio"}>
-                            Portafolio
+                        <Link href={"#"} className={styles.disabled}>
+                            Portafolio (Soon)
                         </Link>
                     </div>
                 </div>
                 <div className={styles.right}>
                     <div className={styles.connectWallet}>
-                        <NavConnectWallet />
+                        <NavConnectWallet className={pageStyles.btnType1} />
                     </div>
                 </div>
             </div>
