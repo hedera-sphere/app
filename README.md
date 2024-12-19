@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Hedera Sphere
 
-First, run the development server:
+Hedera Sphere is the next-generation index fund designed to make investing in the whole crypto ecosystem effortless and rewarding.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+the app is deploy at the url: http://137.184.99.27:3000/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tokens
+| Token Key   | Name         | Symbol     | Token ID     | Max Supply           | Supply Type |
+|-------------|--------------|------------|--------------|----------------------|-------------|
+| `hsphere`   | hsphere      | HSPHERE    | 0.0.5276815  | 100,000,000  | Finite      |
+| `hsphere100`| hsphere100   | HSPHERE100 | 0.0.5276818  | Unlimited            | Infinite    |
+| `usdt`      | Test USDT    | USDT       | 0.0.5276820  | Unlimited            | Infinite    |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Arquitecture
+Hedera sphere is a nextjs aplication that uses the package @hashgraph/sdk to interact with the hedera blockchain
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+In the other hand Hedera Sphere store data related to the index fund in a supabase database, data such as the portfolio constituents, price , percentageChange7d, historical index price
 
-## Learn More
+this supabase database has the next defined tables: 
+#### `appdata`
 
-To learn more about Next.js, take a look at the following resources:
+| Column              | Type     | Constraints                                         | Description                                           |
+|---------------------|----------|-----------------------------------------------------|-------------------------------------------------------|
+| `id`               | numeric  | Primary Key, must be 1                              | Unique identifier, stores the single record of data. |
+| `lastUpdateTime`    | timestamp| Nullable                                            | Timestamp of the last update.                        |
+| `percentageChange7d`| numeric  | Nullable                                            | Percentage change over 7 days.                       |
+| `tokenPrice`        | numeric  | Nullable                                            | Current token price.                                  |
+| `hsphereamount`     | numeric  | Nullable                                            | Amount of hsphere invested.                         |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#### `historicprice`
 
-## Deploy on Vercel
+| Column  | Type      | Constraints  | Description                           |
+|---------|-----------|--------------|---------------------------------------|
+| `date` | timestamp | Primary Key  | Date associated with the price.       |
+| `price`| numeric   | Nullable     | Price of the asset on the given date. |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### `cryptodata`
+
+| Column      | Type      | Constraints     | Description                          |
+|-------------|-----------|-----------------|--------------------------------------|
+| `symbol`    | text      | Primary Key     | Symbol of the cryptocurrency.        |
+| `created_at`| timestamp | Nullable        | Timestamp when the entry was created.|
+| `name`      | text      | Nullable        | Name of the cryptocurrency.          |
+| `weight`    | numeric   | Nullable        | Weight or importance in the index of the crypto.  |
+
+the data of the index is updated running the script:
+
+`node node ./scripts/run-node-refresh-index-data.js`
+
+the only data not updated by this script is the hsphereamount wich is updated each time a user buy or sells tokens, we have not integrated mirror node due to lack of time, we developed this app in 3 days so we aim to implement it in the future
+
+the run-node-refresh-index-data.js script fetchs data from the coinmarketcap 100 index, in the future we aim to define our custom index assets managment logic that can be customized by excluding some tokens defined by the hsphere holders and also with the hability to create new custom tokens composition for the indexed funds
+
+
