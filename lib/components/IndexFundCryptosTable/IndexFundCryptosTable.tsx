@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { CryptoData, getSortedCryptoData } from "@/lib/utils/data";
-
+import { getTokenData } from "@/lib/utils/tokenData";
 import { ContentCard } from "@/lib/components/ContentCard";
 import styles from "./styles.module.scss";
 
 export const IndexFundCryptosTable = () => {
+    const [tokenData, setTokenData] = useState<any>(null);
     const [page, setPage] = useState(0);
     const [cryptosList, setCryptosList] = useState<CryptoData[]>([]);
     const rowsPerPage = 10;
@@ -26,11 +27,17 @@ export const IndexFundCryptosTable = () => {
 
     async function fetchData() {
         async function setSortedCryptosState() {
-            const sortedCryptos = await getSortedCryptoData()
+            const sortedCryptos = await getSortedCryptoData();
             setCryptosList(sortedCryptos);
         }
 
+        async function setTokenDataState() {
+            const tokenData = await getTokenData({ symbol: 'ETH' });
+            setTokenData(tokenData);
+        }
+
         setSortedCryptosState();
+        setTokenDataState();
     }
 
       useEffect(() => {
@@ -65,16 +72,16 @@ export const IndexFundCryptosTable = () => {
                     <button type='button' onClick={handleFirstPage} disabled={page === 0}>
                         First
                     </button>
-                    <button type='button' onClick={handlePreviousPage} disabled={page === 0}>
-                        Previous
+                    <button title='Previous' type='button' className={styles.withIcon} onClick={handlePreviousPage} disabled={page === 0}>
+                        <Image src={'/icons/arrow-left.svg'} alt='Previous' width={16} height={16} />
                     </button>
                 </div>
                 <div className={styles.center}>
                     <p>Page {page + 1} of {totalPages}</p>
                 </div>
                 <div className={styles.right}>
-                    <button type='button' onClick={handleNextPage} disabled={page === totalPages - 1}>
-                        Next
+                    <button title='Next' type='button' className={styles.withIcon} onClick={handleNextPage} disabled={page === totalPages - 1}>
+                        <Image src={'/icons/arrow-right.svg'} alt='Next' width={16} height={16} />
                     </button>
                     <button type='button' onClick={handleLastPage} disabled={page === totalPages - 1}>
                         Last
