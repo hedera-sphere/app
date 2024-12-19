@@ -9,6 +9,7 @@ import { PriceGraph } from "@/lib/components/PriceGraph";
 import { InfoCard } from "@/lib/components/InfoCard";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
+import { PriceCard } from "@/lib/components/PriceCard";
 
 import styles from "./page.module.scss";
 
@@ -48,7 +49,7 @@ export default function Home() {
         <CryptoSwap />
         <PriceGraph name={'HSPHERE'} appData={appData} historicPrices={historicPrices} />
         <ContentCard size={4}>
-          Price?
+          <PriceCard />
         </ContentCard>
         <InfoCard
           title="HSPHERE"
