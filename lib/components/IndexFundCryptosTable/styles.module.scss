@@ -24,6 +24,26 @@
             width: 1.2rem;
             height: 1.2rem;
             vertical-align: sub;
+            border-radius: 50%;
+        }
+
+        .arrow {
+            width: .6rem;
+            height: .6rem;
+            margin-right: .5rem;
+            vertical-align: middle;
+        }
+
+        span {
+            font-weight: 500;
+            color: #424242;
+            &.green {
+                color: #40C994;
+            }
+    
+            &.red {
+                color: #FF6966;
+            }
         }
     }
 
@@ -87,6 +107,7 @@
 
                 &:disabled {
                     background-color: #FFFFFF;
+                    opacity: 0;
                 }
 
                 &.withIcon {
