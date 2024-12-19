@@ -5,10 +5,10 @@ import { AppData, getAppData, getHistoricPrices, HistoricalPrice } from "@/lib/u
 import { CryptoSwap } from "@/lib/components/CryptoSwap";
 import { HeroSection } from "@/lib/components/HeroSection";
 import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
+import { PriceGraph } from "@/lib/components/PriceGraph";
+import { InfoCard } from "@/lib/components/InfoCard";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
-import { HsphereInfo } from "@/lib/components/HsphereInfo";
-
 
 import styles from "./page.module.scss";
 
@@ -46,18 +46,20 @@ export default function Home() {
       <Section>
         <IndexFundCryptosTable />
         <CryptoSwap />
-        <ContentCard size={8}>
-            Graph
-          </ContentCard>
-          <ContentCard size={4}>
-            Price?
-          </ContentCard>
-          <ContentCard size={6}>
-            <HsphereInfo />
-          </ContentCard>
-          <ContentCard size={6}>
-            <HsphereInfo />
-          </ContentCard>
+        <PriceGraph name={'HSPHERE'} appData={appData} historicPrices={historicPrices} />
+        <ContentCard size={4}>
+          Price?
+        </ContentCard>
+        <InfoCard
+          title="HSPHERE"
+          icon="/HSPHERE.svg"
+          cards={["Governance token for decision-making", "Earns USDT generated from index token fees", "Exclude unuseful tokens for an index (USDT, etc)"]}
+        />
+        <InfoCard
+          title="HSPHERE100"
+          icon="/HSPHERE100.svg"
+          cards={["Automatic Portfolio Diversification", "Automatic Fund Rebalancing", "Access to New Investment Opportunities"]}
+        />
       </Section>
     </main>
   );
