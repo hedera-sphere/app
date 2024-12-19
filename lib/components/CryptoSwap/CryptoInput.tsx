@@ -62,9 +62,11 @@ export const CryptoInput = ({
             <span className={styles.name}>{tokenName}</span>
           </div>
         </div>
-        <div className={styles.balance}>
-          {maxMessage && <button type="button" className={styles.maxButton} onClick={setMax}>{maxMessage}<span className={styles.max}>max</span></button>}
-        </div>
+        {maxMessage &&
+          <div className={styles.balance}>
+            <button type="button" className={styles.maxButton} onClick={setMax}>{maxMessage}<span className={styles.max}>max</span></button>
+          </div>
+        }
       </div>
     </div>
   );
