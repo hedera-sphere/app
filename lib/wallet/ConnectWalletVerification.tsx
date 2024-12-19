@@ -23,9 +23,9 @@ const ConnectWalletVerification = ({
     <Image src="/hashpack.png" alt="hashpack" width={25} height={25} />
   </div>
 
-  return <div>
+  return <>
     {walletConnected ? children : btnConnectWallet}
-  </div>
+  </>
 }
 
 export { ConnectWalletVerification }

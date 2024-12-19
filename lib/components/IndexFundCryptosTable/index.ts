@@ -1,0 +1,1 @@
+export { IndexFundCryptosTable } from "./IndexFundCryptosTable";

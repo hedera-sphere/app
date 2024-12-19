@@ -1,0 +1,137 @@
+.table {
+    .row {
+        display: flex;
+        flex-direction: row;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid #DBDBDB;
+        transition: background-color 0.3s ease;
+    }
+
+    .cell {
+        flex: 0 0 25%;
+        padding: 1.25rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1;
+        color: #191919;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .logo {
+            margin-right: .5rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            vertical-align: sub;
+            border-radius: 50%;
+        }
+
+        .arrow {
+            width: .6rem;
+            height: .6rem;
+            margin-right: .5rem;
+            vertical-align: middle;
+        }
+
+        span {
+            font-weight: 500;
+            color: #424242;
+            &.green {
+                color: #40C994;
+            }
+    
+            &.red {
+                color: #FF6966;
+            }
+        }
+    }
+
+    .head {
+        .cell {
+            padding-top: 0;
+            color: #444444;
+            font-weight: 400;
+        }
+        
+    }
+
+    .body {
+        .row {
+            &:hover {
+                background-color: #F5F5F5;
+            }
+            .cell {
+
+            }
+        }
+    }
+
+    .footer {
+        padding: 1rem 1.5rem 0 1.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+
+        .left, .right {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: .5rem;
+
+            &.right {
+                justify-content: flex-end;
+            }
+
+            button {
+                font-size: 1rem;
+                font-weight: 400;
+                color: #424242;
+                text-align: center;
+                line-height: 1;
+                margin-bottom: 0;
+                background: #FFFFFF;
+                border: 1px solid #DBDBDB;
+                border-radius: .3rem;
+                padding: .5rem 1rem;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: #F5F5F5;
+                }
+
+                &:disabled {
+                    background-color: #FFFFFF;
+                    opacity: 0;
+                }
+
+                &.withIcon {
+                    padding: .5rem;
+                }
+
+                img {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    vertical-align: middle;
+                }
+            }
+        }
+        .center {
+            flex: 1;
+
+            p {
+                font-size: 1rem;
+                font-weight: 400;
+                color: #424242;
+                text-align: center;
+                line-height: 1;
+                margin-bottom: 0;
+            }
+        }
+    }
+}

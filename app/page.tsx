@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AppData, CryptoData, getAppData, getHistoricPrices, getSortedCryptoData, HistoricalPrice } from "@/lib/utils/data";
+import { AppData, getAppData, getHistoricPrices, HistoricalPrice } from "@/lib/utils/data";
 import { CryptoSwap } from "@/lib/components/CryptoSwap";
 import { HeroSection } from "@/lib/components/HeroSection";
+import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
+
 
 import styles from "./page.module.scss";
 
 export default function Home() {
-  const [cryptosList, setCryptosList] = useState<CryptoData[]>([]);
   const [appData, setAppData] = useState<AppData>({
     hsphereamount: 0,
     lastUpdateTime: 0,
@@ -19,11 +20,6 @@ export default function Home() {
   })
   const [historicPrices, setHistoricPrices] = useState<HistoricalPrice[]>([])
   async function fetchData() {
-    async function setSortedCryptosState() {
-      const sortedCryptos = await getSortedCryptoData()
-      setCryptosList(sortedCryptos);
-    }
-
     async function setAppDataState() {
       const appData = await getAppData()
       setAppData(appData)
@@ -34,7 +30,6 @@ export default function Home() {
       setHistoricPrices(historicPricesData)
     }
 
-    setSortedCryptosState()
     setAppDataState()
     setHistoricPricesState()
   }
@@ -48,71 +43,8 @@ export default function Home() {
     <main className={styles.page}>
       <HeroSection />
       <Section>
-        <ContentCard size={8}>
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-          Table
-          <br />
-        </ContentCard>
-        <ContentCard size={4}>
-            <CryptoSwap />
-        </ContentCard>
+        <IndexFundCryptosTable />
+        <CryptoSwap />
         <ContentCard size={8}>
             Graph
           </ContentCard>
@@ -126,14 +58,6 @@ export default function Home() {
             Chart 2
           </ContentCard>
       </Section>
-
-        
-      <div>index fund cryptos</div>
-      {(cryptosList ?? [])?.map((c) => {
-        return <div key={c.symbol}>
-          name: {c.name}, symbol: {c.symbol}, portfolio percentage: {c.weight}
-        </div>
-      })}
     </main>
   );
 }

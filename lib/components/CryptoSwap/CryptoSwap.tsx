@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react"
-import { CryptoInput, CryptoInputProps } from "./CryptoInput"
+import React, { useState } from "react";
 import Image from "next/image";
+import { useShallow } from "zustand/shallow";
 import { SPHERE_100, USDT } from "@/lib/consts/tokens";
 import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
 import { convertTo2Decimals, getSpherePrice, invest, sellInvestment } from "@/lib/utils/transactions";
 import { AVAILABLE_STATUS, StatusPopupState } from "@/lib/components/StatusPopup";
-import { useShallow } from "zustand/shallow";
+import { CryptoInput, CryptoInputProps } from "./CryptoInput";
+
+import { ContentCard } from "@/lib/components/ContentCard";
+
+import pageStyles from "@/app/page.module.scss";
+import styles from "./styles.module.scss";
 
 export const CryptoSwap = () => {
   const [swapStatus, setSwapStatus] = useState<"buy" | "sell">("buy")
@@ -88,19 +93,24 @@ export const CryptoSwap = () => {
   function onSwapClick() {
     setSwapStatus(swapStatus == "buy" ? "sell" : "buy")
   }
-  return <div>
-    <span>{swapStatus == "buy" ? "Invest" : "Sell"}</span>
-    <CryptoInput
-      {...topCoin}
-    />
-    <div onClick={onSwapClick}>
-      <Image src="/swap.png" alt="swap" width={20} height={20} />
-    </div>
-    <CryptoInput
-      {...bottomCoin}
-    />
-    <ConnectWalletVerification>
-      <button onClick={onSubmit}>{swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}</button>
-    </ConnectWalletVerification>
-  </div>
+  return (
+    <ContentCard className={styles.cryptoSwap} size={4}>
+      <h6 className={styles.title}>{swapStatus == "buy" ? "Buy" : "Sell"}</h6>
+      <div className={styles.body}>
+        <CryptoInput {...topCoin} />
+
+        <button title="Swap" type="button" className={styles.swapButton} onClick={onSwapClick}>
+          <Image src="/swap.png" alt="swap" width={20} height={20} />
+        </button>
+
+        <CryptoInput {...bottomCoin} />
+
+        <ConnectWalletVerification>
+          <button title="Submit" type="button" className={`${styles.submitButton} ${pageStyles.btnType1}`} onClick={onSubmit}>
+            {swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}
+          </button>
+        </ConnectWalletVerification>
+      </div>
+    </ContentCard>
+  )
 }
