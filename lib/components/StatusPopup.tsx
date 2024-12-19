@@ -6,6 +6,8 @@ import { create } from 'zustand';
 import { useShallow } from 'zustand/shallow';
 import Image from 'next/image';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
+import pageStyles from "@/app/page.module.scss";
+
 export const AVAILABLE_STATUS: {
   LOADING: "loading";
   SUCCESS: "success";
@@ -77,7 +79,7 @@ export const StatusPopup = () => {
         closable={status === AVAILABLE_STATUS.SUCCESS || status === AVAILABLE_STATUS.ERROR}
       >
         {status === AVAILABLE_STATUS.LOADING && <div style={{ textAlign: 'center' }}>
-          <Spin indicator={<Loading3QuartersOutlined spin />} tip="Loading..." size="large" />
+          <Spin indicator={<Loading3QuartersOutlined spin />} size="large" />
           <p>{message}</p>
         </div>
         }
@@ -85,14 +87,14 @@ export const StatusPopup = () => {
           status === AVAILABLE_STATUS.SUCCESS && <div style={{ textAlign: 'center' }}>
             <Image src="/success.svg" alt="success" width={100} height={100} />
             <p>{message}</p>
-            <button onClick={handleClose}>Close</button>
+            <button type="button" className={pageStyles.btnType1} onClick={handleClose}>Close</button>
           </div>
         }
         {
           status === AVAILABLE_STATUS.ERROR && <div style={{ textAlign: 'center' }}>
             <Image src="/error.svg" alt="error" width={100} height={100} />
             <p>{message}</p>
-            <button onClick={handleClose}>Close</button>
+            <button type="button" className={pageStyles.btnType1} onClick={handleClose}>Close</button>
           </div>
         }
       </Modal>
