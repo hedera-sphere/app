@@ -8,6 +8,7 @@ import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
 
+
 import styles from "./page.module.scss";
 
 export default function Home() {

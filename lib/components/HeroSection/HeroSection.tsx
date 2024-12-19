@@ -6,11 +6,10 @@ export const HeroSection = () => {
     <header className={styles.heroSection}>
       <div className={`${styles.container} container`}>
         <div className={styles.content}>
-          <h1>The first blockchain fund based on Hedera</h1>
-          <p>Hedera Sphere allows you to easily, invest and manage your portfolio in the top protocols in the ecosystem</p>
+          <h1 className={styles.title}>The first blockchain fund based on Hedera</h1>
+          <p className={styles.description}>Hedera Sphere allows you to easily invest in the top protocols in the Web3 ecosystem</p>
           <div className={styles.buttons}>
-            <button>Connect Wallet</button>
-            <button>Learn More</button>
+            <button className={styles.btnType2}>Connect Wallet</button>
           </div>
         </div>
       </div>

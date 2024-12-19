@@ -4,6 +4,9 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Navbar } from "@/lib/components/Navbar";
 import "./globals.css";
+import { Lexend_Deca } from 'next/font/google';
+import { Lato } from 'next/font/google';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
