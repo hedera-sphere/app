@@ -40,8 +40,8 @@ export const PriceGraph = ({name, appData, historicPrices}: IProps) => {
                     <p>{name} Price</p>
                 </div>
                 <div className={styles.range}>
-                    <button onClick={() => setRange(RANGES.SEVEN_DAYS)} className={range === RANGES.SEVEN_DAYS ? styles.active : ''}>7D</button>
-                    <button onClick={() => setRange(RANGES.THIRTY_DAYS)} className={range === RANGES.THIRTY_DAYS ? styles.active : ''}>30D</button>
+                    <button onClick={() => setRange(RANGES.SEVEN_DAYS)} className={range === RANGES.SEVEN_DAYS ? styles.active : ''}>7d</button>
+                    <button onClick={() => setRange(RANGES.THIRTY_DAYS)} className={range === RANGES.THIRTY_DAYS ? styles.active : ''}>30d</button>
                     <button onClick={() => setRange(RANGES.ALL)} className={range === RANGES.ALL ? styles.active : ''}>All</button>
                 </div>
             </div>
