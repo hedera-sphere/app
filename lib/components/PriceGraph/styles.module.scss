@@ -1,0 +1,64 @@
+.priceGraph {
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .name {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0;
+            line-height: 1;
+        }
+
+        .range {
+            display: flex;
+            gap: 0.5rem;
+            button {
+                font-size: .9rem;
+                font-weight: 400;
+                margin-bottom: 0;
+                line-height: 1;
+                border: none;
+                background: none;
+                padding: 0.5rem .7rem;
+                border-radius: 0.5rem;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                    background-color: #F0F0F3;
+                }
+
+                &.active {
+                    background-color: #F0F0F3;
+                }
+            }
+        }
+    }
+    .price {
+        .priceValue {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 0;
+            line-height: 1;
+        }
+
+        .priceChange {
+            p {
+                font-size: 1rem;
+                font-weight: 500;
+                margin-bottom: 0;
+                line-height: 1;
+
+                &.green {
+                    color: #40C994;
+                }
+        
+                &.red {
+                    color: #FF6966;
+                }
+            }
+        }
+    }
+
+}

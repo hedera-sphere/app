@@ -1,0 +1,46 @@
+.cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    .card {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1;
+        color: #191919;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        .title {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1;
+            color: #191919;
+        }
+        .value {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1;
+            color: #191919;
+            margin-bottom: 0rem;
+        }
+        .green {
+            color: #40C994;
+        }
+        .red {
+            color: #FF6966;
+        }
+    }
+    .iconText {
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        align-items: center;
+    }
+}
+

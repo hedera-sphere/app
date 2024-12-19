@@ -105,7 +105,7 @@ export const CryptoSwap = () => {
 
         <CryptoInput {...bottomCoin} />
 
-        <ConnectWalletVerification>
+        <ConnectWalletVerification cn={pageStyles.btnType1}>
           <button title="Submit" type="button" className={`${styles.submitButton} ${pageStyles.btnType1}`} onClick={onSubmit}>
             {swapStatus == "buy" ? "Buy Indexed Fund Tokens" : "Sell Indexed Fund Tokens"}
           </button>

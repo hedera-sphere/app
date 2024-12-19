@@ -57,7 +57,7 @@ export const IndexFundCryptosTable = () => {
             <div className={styles.body}>
                 {(paginatedCryptos ?? [])?.map((c) => {
                     return <div key={c.symbol} className={`${styles.row}`}>
-                        <div className={styles.cell}>
+                        <div className={styles.cell} title={c.name}>
                             <Image 
                                 src={c.cmc_id 
                                     ? `https://s2.coinmarketcap.com/static/img/coins/64x64/${c.cmc_id}.png`
