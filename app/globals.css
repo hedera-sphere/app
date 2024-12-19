@@ -38,3 +38,11 @@ a {
   justify-content: center;
   align-items: center;
 }
+
+.nextjs-toast{
+  display: none !important;
+}
+
+.nextjs-portal {
+  display: none;
+}

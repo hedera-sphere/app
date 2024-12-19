@@ -1,17 +1,25 @@
 .page {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .btnType1 {
-    padding: 1rem 1.5rem;
-    text-decoration: none;
-    background-color: #000;
-    color: #fff;
-    border-radius: 8rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    &:hover {
-        background-color: #333;
-    }
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  background-color: #000;
+  color: #fff;
+  border-radius: 8rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: #333;
+  }
+}
+
+.nextjs-toast {
+  display: none !important;
+}
+
+.nextjs-portal {
+  display: none;
 }

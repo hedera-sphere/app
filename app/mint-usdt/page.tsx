@@ -1,6 +1,6 @@
 "use client";
 
-import { CryptoInput } from "@/lib/components/CryptoInput";
+import { CryptoInput } from "@/lib/components/CryptoSwap/CryptoInput";
 import { AVAILABLE_STATUS, StatusPopupState } from "@/lib/components/StatusPopup";
 import {  mintUsdt } from "@/lib/utils/transactions";
 import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerification";
