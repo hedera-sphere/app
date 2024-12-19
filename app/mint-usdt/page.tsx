@@ -46,8 +46,6 @@ export default function Home() {
       <ContentCard size={3}>
         <p className={styles.description}>Enter amount to mint</p>
         <CryptoInput
-          max={MAX_MINT}
-          maxMessage={`${MAX_MINT} maxium`}
           tokenLogo={<Image src="/usdt.png" alt="usdt" width={25} height={25} />}
           value={amount}
           onChange={(v: number) => setAmount(v)}
