@@ -7,6 +7,7 @@ import { HeroSection } from "@/lib/components/HeroSection";
 import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
+import { HsphereInfo } from "@/lib/components/HsphereInfo";
 
 
 import styles from "./page.module.scss";
@@ -52,10 +53,10 @@ export default function Home() {
             Price?
           </ContentCard>
           <ContentCard size={6}>
-            Chart 1
+            <HsphereInfo />
           </ContentCard>
           <ContentCard size={6}>
-            Chart 2
+            <HsphereInfo />
           </ContentCard>
       </Section>
     </main>
