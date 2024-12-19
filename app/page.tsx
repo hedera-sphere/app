@@ -8,6 +8,8 @@ import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
 import { Section } from "@/lib/components/Section";
 import { ContentCard } from "@/lib/components/ContentCard";
 import { HsphereInfo } from "@/lib/components/HsphereInfo";
+import { PriceCard } from "@/lib/components/PriceCard";
+
 
 
 import styles from "./page.module.scss";
@@ -50,7 +52,7 @@ export default function Home() {
             Graph
           </ContentCard>
           <ContentCard size={4}>
-            Price?
+            <PriceCard />
           </ContentCard>
           <ContentCard size={6}>
             <HsphereInfo />
