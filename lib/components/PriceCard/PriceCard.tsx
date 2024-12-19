@@ -1,26 +1,35 @@
 import React from 'react';
-import styles from "./styles.module.scss";
 import Image from 'next/image';
+import { AppData } from '@/lib/utils/data';
+import { ContentCard } from '@/lib/components/ContentCard';
+import styles from "./styles.module.scss";
 
-export const PriceCard = () => {
+interface PriceCardProps {
+    appData: AppData;
+}
+
+export const PriceCard = ({ appData }: PriceCardProps) => {
+    const marketCap = appData.hsphereamount * appData.tokenPrice;
     return (
-        <div className={styles.cards}>
-            <div className={styles.card}>
-                <p className={styles.title}>7d price change</p>
-                <div className={styles.iconText}>
-                    <Image src={'/icons/arrow-up.svg'} alt='Up' width={16} height={16} className={styles.arrow} /> 
-                    <p className={styles.value + ' ' + styles.green}>5.20%</p>
+        <ContentCard size={4}>
+            <div className={styles.cards}>
+                <div className={styles.card}>
+                    <p className={styles.title}>7d price change</p>
+                    <div className={styles.iconText}>
+                        {appData.percentageChange7d > 0 ?
+                            <Image src={'/icons/arrow-up.svg'} alt='Up' width={16} height={16} className={styles.arrow} />
+                        :
+                            <Image src={'/icons/arrow-down.svg'} alt='Down' width={16} height={16} className={styles.arrow} />
+                        }
+                        <p className={styles.value + ' ' + (appData.percentageChange7d > 0 ? styles.green : styles.red)}>{Math.abs(appData.percentageChange7d).toFixed(2)}%</p>
+                    </div>
+            
                 </div>
-                
+                <div className={styles.card}>
+                    <p className={styles.title}>Fund market cap</p>
+                    <p className={styles.value}>${marketCap.toFixed(2)}</p>
+                </div>
             </div>
-            <div className={styles.card}>
-                <p className={styles.title}>Fund market cap</p>
-                <p className={styles.value}>$122,3412</p>
-            </div>
-            <div className={styles.card}>
-                <p className={styles.title}>Number of users</p>
-                <p className={styles.value}>12,542</p>
-            </div>
-        </div>
+        </ContentCard>
     )
 }

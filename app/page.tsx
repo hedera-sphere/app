@@ -8,7 +8,6 @@ import { IndexFundCryptosTable } from "@/lib/components/IndexFundCryptosTable";
 import { PriceGraph } from "@/lib/components/PriceGraph";
 import { InfoCard } from "@/lib/components/InfoCard";
 import { Section } from "@/lib/components/Section";
-import { ContentCard } from "@/lib/components/ContentCard";
 import { PriceCard } from "@/lib/components/PriceCard";
 
 import styles from "./page.module.scss";
@@ -41,6 +40,7 @@ export default function Home() {
     // get all cryptodata items
     fetchData()
   },[]);
+
   return (
     <main className={styles.page}>
       <HeroSection />
@@ -48,9 +48,7 @@ export default function Home() {
         <IndexFundCryptosTable />
         <CryptoSwap />
         <PriceGraph name={'HSPHERE'} appData={appData} historicPrices={historicPrices} />
-        <ContentCard size={4}>
-          <PriceCard />
-        </ContentCard>
+        <PriceCard appData={appData} />
         <InfoCard
           title="HSPHERE"
           icon="/HSPHERE.svg"
