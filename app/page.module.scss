@@ -1,5 +1,5 @@
 .page {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .btnType1 {
@@ -15,6 +15,10 @@
     }
 }
 
-.title {
-    color: red;
+.nextjs-toast {
+  display: none !important;
+}
+
+.nextjs-portal {
+  display: none;
 }

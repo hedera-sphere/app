@@ -61,6 +61,8 @@ export const StatusPopup = () => {
           maxHeight: '100vh',
           maxWidth: '50%',
           marginTop: '20vh',
+        }}
+        styles={{
           body: {
             height: 'auto',
             paddingTop: '5%',
@@ -69,7 +71,7 @@ export const StatusPopup = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-          },
+          }
         }}
         wrapClassName="status-modal"
         closable={status === AVAILABLE_STATUS.SUCCESS || status === AVAILABLE_STATUS.ERROR}
