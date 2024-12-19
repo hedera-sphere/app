@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <Section className={styles.mintUsdt}>
-      <p className={styles.title}>Mint usdt to test our project :)</p>
+      <p className={styles.title}>Mint USDT to test our project :)</p>
       <ContentCard size={3}>
         <p className={styles.description}>Enter amount to mint</p>
         <CryptoInput
