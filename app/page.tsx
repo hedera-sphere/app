@@ -47,7 +47,7 @@ export default function Home() {
       <Section>
         <IndexFundCryptosTable />
         <CryptoSwap />
-        <PriceGraph name={'HSPHERE'} appData={appData} historicPrices={historicPrices} />
+        <PriceGraph name={'HSPHERE100'} appData={appData} historicPrices={historicPrices} />
         <PriceCard appData={appData} />
         <InfoCard
           title="HSPHERE"

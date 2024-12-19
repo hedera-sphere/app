@@ -7,6 +7,11 @@ import { ConnectWalletVerification } from "@/lib/wallet/ConnectWalletVerificatio
 import Image from "next/image";
 import { useState } from "react";
 import { useShallow } from "zustand/shallow";
+
+import { Section } from "@/lib/components/Section";
+import { ContentCard } from "@/lib/components/ContentCard";
+import styles from "./styles.module.scss";
+import pageStyles from "@/app/page.module.scss";
 const MAX_MINT = 10000;
 export default function Home() {
   const [amount, setAmount] = useState<number>(0);
@@ -36,19 +41,24 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <span>Mint usdt to test our project :)</span>
-      <CryptoInput
-        max={MAX_MINT}
-        maxMessage={`${MAX_MINT} maxium`}
-        tokenLogo={<Image src="/usdt.png" alt="usdt" width={25} height={25} />}
-        value={amount}
-        onChange={(v: number) => setAmount(v)}
-        tokenName=""
-      />
-      <ConnectWalletVerification>
-        <button onClick={onSubmit}>Mint</button>
-      </ConnectWalletVerification>
-    </div>
+    <Section className={styles.mintUsdt}>
+      <p className={styles.title}>Mint usdt to test our project :)</p>
+      <ContentCard size={3}>
+        <p className={styles.description}>Enter amount to mint</p>
+        <CryptoInput
+          max={MAX_MINT}
+          maxMessage={`${MAX_MINT} maxium`}
+          tokenLogo={<Image src="/usdt.png" alt="usdt" width={25} height={25} />}
+          value={amount}
+          onChange={(v: number) => setAmount(v)}
+          tokenName="USDT"
+        />
+        <div className={styles.submitButton}>
+          <ConnectWalletVerification cn={pageStyles.btnType1}>
+            <button className={pageStyles.btnType1} onClick={onSubmit}>Mint</button>
+          </ConnectWalletVerification>
+        </div>
+      </ContentCard>
+    </Section>
   );
 }
